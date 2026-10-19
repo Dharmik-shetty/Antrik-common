@@ -1,10 +1,10 @@
-name: Weekly Panchang & Rashifal Update
+name: Daily Panchang & Rashifal Update
 
 on:
   schedule:
-    # Runs at 18:30 UTC on Saturday (which is 00:00 IST on Sunday midnight)
-    - cron: "30 18 * * 6"
-  workflow_dispatch: # Allows manual trigger from GitHub UI anytime
+    # Runs at 18:30 UTC every day (which is 00:00 / 12:00 AM IST)
+    - cron: "30 18 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -27,7 +27,7 @@ jobs:
         run: |
           pip install google-genai
 
-      - name: Generate Weekly Panchang & Rashifal
+      - name: Generate Daily Panchang & Rashifal
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
@@ -37,8 +37,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/panchang-rashifal-week.json
+          git add data/ app/src/main/assets/panchang-rashifal-week.json
           git diff --cached --quiet || (
-            git commit -m "chore(astrology): update weekly panchang and rashifal [skip ci]"
+            git commit -m "chore(astrology): update rolling panchang and rashifal [skip ci]"
             git push
           )
