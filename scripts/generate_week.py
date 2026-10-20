@@ -1,8 +1,9 @@
 """
 generate_today.py
-Forces fresh generation of TODAY across all 8 languages using Groq.
+Hybrid Architecture:
+- Base Jyotish Generation (Panchanga & 12-Rashi Bhavisya): Google Gemini 3.8 Flash
+- Regional Translation & Indic Script Localization: Groq GPT-OSS 120B (with GPT-OSS 20B & Gemini fallbacks)
 Translates all technical Panchang terms directly into native Indic scripts.
-Guarantees 100% complete coverage for all 12 Rashis with robust fallback and key normalization.
 """
 
 import copy
@@ -13,6 +14,9 @@ import time
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
+
+from google import genai
+from google.genai import types
 from groq import Groq
 
 # Real-time stdout buffering so GitHub Actions displays progress live
@@ -25,27 +29,31 @@ if hasattr(sys.stdout, "reconfigure"):
 # ---------------------------------------------------------
 # 1. Configuration & Client Setup
 # ---------------------------------------------------------
-api_key = os.environ.get("GROQ_API_KEY")
-if not api_key:
+google_api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+groq_api_key = os.environ.get("GROQ_API_KEY")
+
+if not google_api_key:
+    print("Error: GOOGLE_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
+    sys.exit(1)
+
+if not groq_api_key:
     print("Error: GROQ_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
     sys.exit(1)
 
-client = Groq(api_key=api_key)
+gemini_client = genai.Client(api_key=google_api_key)
+groq_client = Groq(api_key=groq_api_key)
 
-# Models tailored for task types:
-# Base astrology generation benefits from deep reasoning (GPT-OSS 120B / 20B)
-BASE_MODELS = [
-    "openai/gpt-oss-120b",
-    "openai/gpt-oss-20b",
-    "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant"
+# Models for Base Generation (Google Gemini)
+GEMINI_MODELS = [
+    "gemini-3.8-flash",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash"
 ]
 
-# Translation requires high linguistic throughput without wasting token budget on reasoning
-TRANSLATION_MODELS = [
-    "llama-3.3-70b-versatile",
+# Models for Translation (Groq GPT-OSS)
+GROQ_MODELS = [
     "openai/gpt-oss-120b",
-    "llama-3.1-8b-instant",
     "openai/gpt-oss-20b"
 ]
 
@@ -102,7 +110,6 @@ def get_default_rashi(rashi_name: str) -> dict:
     }
 
 def clean_json_response(raw_text: str) -> dict:
-    """Safely extracts JSON from model response even if surrounded by markdown code blocks."""
     cleaned = raw_text.strip()
     if cleaned.startswith("```"):
         lines = cleaned.splitlines()
@@ -114,14 +121,51 @@ def clean_json_response(raw_text: str) -> dict:
     return json.loads(cleaned)
 
 # ---------------------------------------------------------
-# 2. API Invocation with Multi-Model Fallback
+# 2. Google Gemini Invocation (Base Jyotish Generation)
 # ---------------------------------------------------------
-def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3, models_list: list = None) -> dict:
-    if models_list is None:
-        models_list = BASE_MODELS
-
+def call_gemini_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
     last_error = None
-    for model_name in models_list:
+    for model_name in GEMINI_MODELS:
+        for attempt in range(max_retries):
+            try:
+                response = gemini_client.models.generate_content(
+                    model=model_name,
+                    contents=user_prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_prompt,
+                        response_mime_type="application/json",
+                        temperature=0.2,
+                    )
+                )
+                raw_text = response.text
+                if not raw_text:
+                    raise ValueError(f"Empty response from Gemini {model_name}")
+                return clean_json_response(raw_text)
+
+            except Exception as e:
+                last_error = e
+                err_msg = str(e).lower()
+                if "429" in err_msg or "resource_exhausted" in err_msg:
+                    print(f"   [!] Rate limit on Gemini {model_name}. Waiting 15s...", flush=True)
+                    time.sleep(15)
+                    continue
+                if "404" in err_msg or "not_found" in err_msg or "not found" in err_msg:
+                    print(f"   [!] Gemini model {model_name} not available. Trying fallback...", flush=True)
+                    break
+
+                delay = 3 * (attempt + 1)
+                print(f"   [!] {task_name} (Gemini {model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}", flush=True)
+                if attempt < max_retries - 1:
+                    time.sleep(delay)
+
+    raise RuntimeError(f"All Gemini models exhausted for {task_name}. Last error: {last_error}")
+
+# ---------------------------------------------------------
+# 3. Groq Invocation (Translation with Gemini Fallback)
+# ---------------------------------------------------------
+def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
+    last_error = None
+    for model_name in GROQ_MODELS:
         for attempt in range(max_retries):
             try:
                 call_kwargs = {
@@ -134,14 +178,12 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                     "temperature": 0.2,
                     "max_completion_tokens": 8192
                 }
-
-                # Reasoning models on Groq (gpt-oss, qwen, deepseek) must use hidden reasoning format with json_object
-                if "gpt-oss" in model_name or "qwen" in model_name or "deepseek" in model_name:
+                if "gpt-oss" in model_name:
                     call_kwargs["reasoning_format"] = "hidden"
                     call_kwargs["reasoning_effort"] = "low"
 
                 try:
-                    response = client.chat.completions.create(**call_kwargs)
+                    response = groq_client.chat.completions.create(**call_kwargs)
                 except Exception as inner_e:
                     err_str = str(inner_e).lower()
                     retry_needed = False
@@ -157,13 +199,13 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                         retry_needed = True
 
                     if retry_needed:
-                        response = client.chat.completions.create(**call_kwargs)
+                        response = groq_client.chat.completions.create(**call_kwargs)
                     else:
                         raise inner_e
 
                 raw_text = response.choices[0].message.content
                 if not raw_text:
-                    raise ValueError(f"Empty response received from {model_name}")
+                    raise ValueError(f"Empty response from Groq {model_name}")
 
                 return clean_json_response(raw_text)
 
@@ -172,31 +214,26 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                 err_msg = str(e).lower()
 
                 if "rate_limit_exceeded" in err_msg or "429" in err_msg:
-                    print(f"   [!] Rate limit on {model_name}. Waiting 20s...", flush=True)
+                    print(f"   [!] Rate limit on Groq {model_name}. Waiting 20s...", flush=True)
                     time.sleep(20)
                     continue
 
                 if "model_not_found" in err_msg or "404" in err_msg:
-                    print(f"   [!] Model {model_name} not available. Trying fallback...", flush=True)
+                    print(f"   [!] Model {model_name} not available on Groq. Trying fallback...", flush=True)
                     break
 
                 if "max completion tokens reached" in err_msg or "max_completion_tokens" in err_msg:
-                    print(f"   [!] Token limit exhausted on {model_name}. Switching immediately to fallback model...", flush=True)
+                    print(f"   [!] Token limit exhausted on Groq {model_name}. Trying fallback...", flush=True)
                     break
 
-                if "json_validate_failed" in err_msg or "400" in err_msg:
-                    print(f"   [!] JSON validation failed on {model_name} (attempt {attempt + 1}/{max_retries}).", flush=True)
-                    if attempt == max_retries - 1:
-                        print(f"       Switching to alternative model for {task_name}...", flush=True)
-                        break
-
                 delay = 4 * (attempt + 1)
-                print(f"   [!] {task_name} ({model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}", flush=True)
+                print(f"   [!] {task_name} (Groq {model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}", flush=True)
                 if attempt < max_retries - 1:
-                    print(f"       Waiting {delay}s before retrying...", flush=True)
                     time.sleep(delay)
 
-    raise RuntimeError(f"All models exhausted for {task_name}. Last error: {last_error}")
+    # Seamless safety fallback: If Groq models fail, use Google Gemini for translation
+    print(f"   [!] Groq models unavailable for {task_name}. Falling back to Google Gemini...", flush=True)
+    return call_gemini_with_retry(system_prompt, user_prompt, task_name=f"{task_name} (Gemini fallback)")
 
 def normalize_base_day(day_data: dict, target_date: datetime.date) -> dict:
     date_str = target_date.strftime("%Y-%m-%d")
@@ -209,7 +246,6 @@ def normalize_base_day(day_data: dict, target_date: datetime.date) -> dict:
     day_data.setdefault("day_of_week", day_name)
     day_data.setdefault("day_of_week_sanskrit", "Ravivara" if day_name == "Sunday" else f"{day_name}vara")
 
-    # Ensure panchang structure
     p = day_data.setdefault("panchang", {})
     t = p.setdefault("tithi", {})
     t.setdefault("name", "Shukla Navami")
@@ -247,7 +283,6 @@ def normalize_base_day(day_data: dict, target_date: datetime.date) -> dict:
     p.setdefault("moon_sign_today", "Makara")
     p.setdefault("festival_or_vrat", "Regular day")
 
-    # Normalize Rashifal dictionary
     raw_rashifal = day_data.get("rashifal", {})
     if not isinstance(raw_rashifal, dict):
         raw_rashifal = {}
@@ -258,7 +293,6 @@ def normalize_base_day(day_data: dict, target_date: datetime.date) -> dict:
             mapped_name = RASHI_ALIASES.get(str(raw_k).strip().lower(), str(raw_k).strip())
             normalized_rashifal[mapped_name] = raw_v
 
-    # Guarantee all 12 canonical Rashis exist with complete fields
     final_rashifal = {}
     for rashi in RASHIS:
         default_item = get_default_rashi(rashi)
@@ -338,7 +372,7 @@ Astrological Requirements:
    - Write insightful, non-fatalistic, inspiring predictions.
    - Provide lucky number (1-9), lucky color, best time window, ratings (1-5), and a simple Vedic remedy (Upay).
 
-CRITICAL: Return ONLY valid JSON matching this schema. Do NOT include markdown code blocks or ellipses:
+CRITICAL: Return ONLY valid JSON matching this schema:
 {{
   "date": "{date_str}",
   "day_of_week": "{day_name}",
@@ -385,11 +419,10 @@ CRITICAL: Return ONLY valid JSON matching this schema. Do NOT include markdown c
   }}
 }}
 """
-    raw_day = call_groq_with_retry(
+    raw_day = call_gemini_with_retry(
         system_prompt,
         user_prompt,
-        task_name=f"Base Gen {date_str}",
-        models_list=BASE_MODELS
+        task_name=f"Base Gen {date_str}"
     )
     return normalize_base_day(raw_day, target_date)
 
@@ -453,7 +486,7 @@ CRITICAL RULES:
    - Moon sign name
    - Festival or vrat
 3. Keep the translation strictly faithful to original predictions, colors, and remedies.
-4. Output ONLY valid JSON matching this schema. Do NOT include markdown code blocks (like ```json), commentary, or ellipses.
+4. Output ONLY valid JSON matching this schema:
 
 Source JSON:
 {json.dumps(translatable_payload, ensure_ascii=False)}
@@ -483,13 +516,11 @@ Output Schema:
     translated_fields = call_groq_with_retry(
         system_prompt,
         user_prompt,
-        task_name=f"Translate {date_str} to {lang_name}",
-        models_list=TRANSLATION_MODELS
+        task_name=f"Translate {date_str} to {lang_name}"
     )
 
     localized_day = copy.deepcopy(day_data)
     
-    # 1. Update Day and Moon Sign in localized script
     if "day_of_week_sanskrit" in translated_fields and translated_fields["day_of_week_sanskrit"]:
         localized_day["day_of_week_sanskrit"] = translated_fields["day_of_week_sanskrit"]
 
@@ -497,7 +528,6 @@ Output Schema:
     if "moon_sign_today" in translated_fields and translated_fields["moon_sign_today"]:
         loc_p["moon_sign_today"] = translated_fields["moon_sign_today"]
 
-    # 2. Update Panchang elements safely
     trans_p = translated_fields.get("panchang", {})
     if isinstance(trans_p, dict):
         t = loc_p.setdefault("tithi", {})
@@ -524,7 +554,6 @@ Output Schema:
         if trans_p.get("festival_or_vrat"):
             loc_p["festival_or_vrat"] = trans_p["festival_or_vrat"]
 
-    # 3. Update Rashifal text fields safely without ANY KeyError
     loc_r = localized_day.setdefault("rashifal", {})
     trans_rashifal = translated_fields.get("rashifal", {})
     if not isinstance(trans_rashifal, dict):
@@ -562,7 +591,6 @@ def save_dataset_file(output_dir: Path, code: str, dataset: dict):
     lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
     lang_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Sync localized Android asset if app directory exists
     asset_lang_file = Path(f"app/src/main/assets/panchang-rashifal-week-{code}.json")
     try:
         if asset_lang_file.parent.exists():
@@ -586,11 +614,10 @@ def load_existing_datasets(output_dir: Path) -> dict:
     datasets = {}
     for code, name in LANGUAGES.items():
         file_path = output_dir / f"panchang-rashifal-week-{code}.json"
-        if lang_file := file_path:
-            if code == "en" and not file_path.exists():
-                alt_path = output_dir / "panchang-rashifal-week.json"
-                if alt_path.exists():
-                    file_path = alt_path
+        if code == "en" and not file_path.exists():
+            alt_path = output_dir / "panchang-rashifal-week.json"
+            if alt_path.exists():
+                file_path = alt_path
 
         if file_path.exists():
             try:
@@ -624,11 +651,11 @@ def main():
     date_str = today.strftime("%Y-%m-%d")
 
     print(f"============================================================", flush=True)
-    print(f" One-Time Panchang & Rashifal Generator (Groq LPU)", flush=True)
+    print(f" Hybrid Jyotish Generator (Google Gemini + Groq LPU)", flush=True)
     print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})", flush=True)
     print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)", flush=True)
-    print(f" Base Models: {' -> '.join(BASE_MODELS)}", flush=True)
-    print(f" Translation Models: {' -> '.join(TRANSLATION_MODELS)}", flush=True)
+    print(f" Base Astrologer: Google Gemini ({' -> '.join(GEMINI_MODELS)})", flush=True)
+    print(f" Translator: Groq ({' -> '.join(GROQ_MODELS)})", flush=True)
     print(f"============================================================\n", flush=True)
 
     output_dir = Path("data")
@@ -639,17 +666,17 @@ def main():
     print(f"Generating Today: {date_str} ({today.strftime('%A')})", flush=True)
     indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
 
-    # 1. Base English Generation (Always fresh for Today)
-    print(f" [+] Generating Base English for today {date_str}...", flush=True)
+    # 1. Base English Generation (Google Gemini 3.8 Flash)
+    print(f" [+] Generating Base English with Google Gemini for {date_str}...", flush=True)
     english_day = generate_base_day(today)
     datasets["en"]["days"][date_str] = english_day
     save_dataset_file(output_dir, "en", datasets["en"])
     print(f"     [OK] English saved to disk.", flush=True)
     time.sleep(REQUEST_SPACING_SECONDS)
 
-    # 2. Translate into 7 Indic Languages
+    # 2. Translate into 7 Indic Languages (Groq GPT-OSS 120B)
     for code, name in indic_langs.items():
-        print(f" -> Localizing {date_str} to {name} ({code})...", flush=True)
+        print(f" -> Localizing {date_str} to {name} ({code}) with Groq...", flush=True)
         localized_day = translate_day(english_day, lang_code=code, lang_name=name)
         datasets[code]["days"][date_str] = localized_day
         
