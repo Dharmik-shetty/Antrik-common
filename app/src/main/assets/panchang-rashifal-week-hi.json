@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-10-20T21:07:33.617892+05:30",
+    "generated_at": "2026-10-20T21:17:12.668514+05:30",
     "language_code": "hi",
     "language_name": "Hindi",
     "timezone": "Asia/Kolkata",
@@ -18,22 +18,22 @@
       "day_of_week_sanskrit": "मंगलवार",
       "panchang": {
         "tithi": {
-          "name": "कृष्ण तृतीया",
-          "paksha": "कृष्ण",
-          "description": "आत्मनिरीक्षण और पिछले बोझों को छोड़ने का दिन; आध्यात्मिक अभ्यास से आंतरिक स्पष्टता प्राप्त होती है।"
+          "name": "एकादशी",
+          "paksha": "शुक्ल",
+          "description": "व्रत और भक्ति का दिन, आध्यात्मिक अभ्यासों के लिए उपयुक्त।"
         },
         "nakshatra": {
-          "name": "मृगशीर्ष",
-          "ruler": "मंगल",
+          "name": "उत्तर फाल्गुनी",
+          "ruler": "सूर्य",
           "pada": 2,
-          "deity": "Soma"
+          "deity": "Ahirbudhnya"
         },
         "yoga": {
-          "name": "विजय",
+          "name": "विष्कम्भ",
           "nature": "भलाईकारी"
         },
         "karana": {
-          "name": "गरिज"
+          "name": "विष्टी"
         },
         "calendar": {
           "vikram_samvat": 2083,
@@ -46,133 +46,49 @@
         "timings_ist": {
           "sunrise": "06:25 AM",
           "sunset": "05:46 PM",
-          "rahu_kaal": "07:30 AM - 09:00 AM",
-          "abhijit_muhurat": "12:00 PM - 12:48 PM",
-          "brahma_muhurta": "04:49 AM - 05:49 AM"
+          "rahu_kaal": "12:00 PM - 01:30 PM",
+          "abhijit_muhurat": "12:00 PM - 12:28 PM",
+          "brahma_muhurta": "04:49 AM - 06:25 AM"
         },
-        "moon_sign_today": "वृषभ",
+        "moon_sign_today": "सिंह (सिंह)",
         "festival_or_vrat": "साधारण दिन"
       },
       "rashifal": {
         "Mesha": {
-          "summary": "New opportunities arise, but patience is required.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 2,
-          "transit_effect": "Neutral",
-          "general": "The day encourages careful planning; avoid impulsive decisions. Meditation will help maintain balance.",
-          "career": "Creative ideas surface; channel them into concrete proposals. Team collaboration yields better results.",
-          "finance": "Small gains are possible; steer clear of speculative investments today.",
-          "relationships": "Open communication resolves lingering misunderstandings. Show appreciation to loved ones.",
-          "health": "Mindful breathing exercises will reduce stress. Stay hydrated and avoid heavy meals.",
+          "summary": "ऊर्जा में उछाल; नई पहलों को शुरू करने का उत्तम समय।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "चंद्रमा की अग्नि प्रभाव आपके आत्मा को ऊर्जा देता है। आत्मविश्वास और आशावाद उच्च स्तर पर हैं।",
+          "career": "साहसी विचार कार्यस्थल पर सराहे जाएंगे। सहयोगी परियोजनाओं में नेतृत्व करें।",
+          "finance": "अप्रत्याशित लाभ मिल सकते हैं; समझदारी से निवेश करें परंतु अटकलों से बचें।",
+          "relationships": "उत्साही मुलाकातें अनुकूल हैं; प्रियजनों से खुलकर संवाद करें।",
+          "health": "शारीरिक सहनशक्ति मजबूत है—तीव्र व्यायाम करें।",
           "lucky_number": 3,
-          "lucky_color": "Red",
-          "auspicious_time": "06:00 AM - 08:00 AM",
-          "remedy": "Light a ghee lamp and chant the Gayatri mantra.",
+          "lucky_color": "लाल",
+          "auspicious_time": "06:30 AM - 08:30 AM",
+          "remedy": "घी का दीपक जलाएँ और गायत्री मंत्र का जप करें।",
           "ratings": {
-            "career": 3,
-            "finance": 2,
+            "career": 5,
+            "finance": 4,
             "love": 4,
             "health": 4
           }
         },
         "Vrishabha": {
-          "summary": "Personal confidence shines, making it a favorable day.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 1,
-          "transit_effect": "Positive",
-          "general": "Your inner stability radiates outward, attracting support. Trust your instincts in decisions.",
-          "career": "Leadership roles feel natural; take initiative on pending projects.",
-          "finance": "Steady income streams are reinforced; consider saving a portion of earnings.",
-          "relationships": "Romantic bonds deepen through shared activities. Family harmony is highlighted.",
-          "health": "Physical stamina is high; a light workout will be invigorating.",
+          "summary": "स्थिर प्रगति का दिन; व्यावहारिक कार्यों पर ध्यान दें।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 2,
+          "transit_effect": "Neutral",
+          "general": "चंद्रमा की अग्नि आपके दैनिक जीवन में चिंगारी जोड़ती है। धैर्य इसे नियंत्रित करने में मदद करेगा।",
+          "career": "विवरणपरक कार्य सराहना पाते हैं। निर्णय लेने में जल्दबाजी न करें।",
+          "finance": "स्थिर आय जारी है; एक छोटी बचत योजना लाभदायक हो सकती है।",
+          "relationships": "सहज संवाद बंधनों को गहरा करते हैं। साथी को सराहना दिखाएँ।",
+          "health": "संतुलित आहार रखें; अत्यधिक सेवन से बचें।",
           "lucky_number": 5,
-          "lucky_color": "Green",
+          "lucky_color": "हरा",
           "auspicious_time": "09:00 AM - 11:00 AM",
-          "remedy": "Offer water to a peepal tree and recite the Vishnu Sahasranama.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 5,
-            "health": 5
-          }
-        },
-        "Mithuna": {
-          "summary": "Communication flows smoothly, aiding personal growth.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 12,
-          "transit_effect": "Challenging",
-          "general": "Emotions may feel confined; express them constructively. Avoid overthinking.",
-          "career": "Finish pending tasks before starting new ones; multitasking may cause errors.",
-          "finance": "Unexpected expenses could arise; keep a buffer.",
-          "relationships": "Misunderstandings can surface; practice active listening.",
-          "health": "Digestive system is sensitive; opt for light, warm foods.",
-          "lucky_number": 7,
-          "lucky_color": "Yellow",
-          "auspicious_time": "04:00 PM - 06:00 PM",
-          "remedy": "Donate yellow sweets to a child’s home and chant the Saraswati mantra.",
-          "ratings": {
-            "career": 2,
-            "finance": 2,
-            "love": 3,
-            "health": 3
-          }
-        },
-        "Karka": {
-          "summary": "Emotional depth offers chances for healing.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 11,
-          "transit_effect": "Neutral",
-          "general": "Family matters gain prominence; nurture bonds with compassion. Reflect on past patterns.",
-          "career": "Team projects benefit from your empathy; avoid taking on too much alone.",
-          "finance": "Steady income continues; a modest charitable donation brings blessings.",
-          "relationships": "Intimate conversations strengthen trust. Plan a quiet evening with partner.",
-          "health": "Emotional balance supports immunity; practice gentle yoga.",
-          "lucky_number": 2,
-          "lucky_color": "White",
-          "auspicious_time": "08:00 AM - 10:00 AM",
-          "remedy": "Offer milk to a cow and chant the Om Namah Shivaya mantra.",
-          "ratings": {
-            "career": 3,
-            "finance": 3,
-            "love": 4,
-            "health": 4
-          }
-        },
-        "Simha": {
-          "summary": "Leadership qualities are highlighted; use them wisely.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 10,
-          "transit_effect": "Positive",
-          "general": "Your charisma attracts opportunities; stay humble. Public speaking goes well.",
-          "career": "Presentations and negotiations are favored; showcase your ideas confidently.",
-          "finance": "Profits from earlier investments may materialize; consider reinvesting wisely.",
-          "relationships": "Social gatherings bring joy; share your enthusiasm with friends.",
-          "health": "Energy levels are high; a brisk walk will be refreshing.",
-          "lucky_number": 1,
-          "lucky_color": "Gold",
-          "auspicious_time": "11:00 AM - 01:00 PM",
-          "remedy": "Light a camphor lamp and recite the Hanuman Chalisa.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 4,
-            "health": 5
-          }
-        },
-        "Kanya": {
-          "summary": "Attention to detail brings success in tasks.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 9,
-          "transit_effect": "Neutral",
-          "general": "Organize your space to enhance mental clarity. Small routines yield big results.",
-          "career": "Analytical work is favored; finish reports with precision.",
-          "finance": "Budget reviews are beneficial; avoid impulsive purchases.",
-          "relationships": "Offer practical help to loved ones; it deepens bonds.",
-          "health": "Focus on joint health; gentle stretching is advised.",
-          "lucky_number": 4,
-          "lucky_color": "Brown",
-          "auspicious_time": "02:00 PM - 04:00 PM",
-          "remedy": "Donate brown lentils to a shelter and chant the Mahamrityunjaya mantra.",
+          "remedy": "पीपल के पेड़ को जल अर्पित करें और विष्णु सहस्रनाम का पाठ करें।",
           "ratings": {
             "career": 4,
             "finance": 4,
@@ -180,45 +96,129 @@
             "health": 4
           }
         },
-        "Tula": {
-          "summary": "Balance is key; seek harmony in all areas.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 8,
-          "transit_effect": "Challenging",
-          "general": "Conflicts may arise if you resist compromise. Practice patience and fairness.",
-          "career": "Negotiations require flexibility; avoid rigid stances.",
-          "finance": "Watch for hidden costs; double‑check contracts.",
-          "relationships": "Disagreements can be resolved through open dialogue; avoid blame.",
-          "health": "Stress may affect the nervous system; try meditation.",
-          "lucky_number": 6,
-          "lucky_color": "Pink",
-          "auspicious_time": "05:00 PM - 07:00 PM",
-          "remedy": "Offer pink roses to a deity of love and chant the Radha Krishna mantra.",
+        "Mithuna": {
+          "summary": "जिज्ञासा चरम पर; नई सीख के मार्गों का अन्वेषण करें।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 3,
+          "transit_effect": "Positive",
+          "general": "बौद्धिक अग्नि प्रज्वलित है, अध्ययन और संवाद को प्रोत्साहित करती है। सामाजिक संपर्क जीवंत हैं।",
+          "career": "नेटवर्किंग नई संभावनाएँ लाती है। आत्मविश्वास से विचार साझा करें।",
+          "finance": "रचनात्मक उद्यमों से अल्पकालिक लाभ संभव है।",
+          "relationships": "हास्यपूर्ण बातचीत मित्रता को मजबूत करती है; संवाद को हल्का रखें।",
+          "health": "योग जैसी मन-शरीर गतिविधियाँ विशेष रूप से लाभदायक हैं।",
+          "lucky_number": 7,
+          "lucky_color": "पीला",
+          "auspicious_time": "11:00 AM - 01:00 PM",
+          "remedy": "दाएँ कलाई पर पीला धागा बांधें और ॐ नमः शिवाय का जप करें।",
           "ratings": {
-            "career": 2,
+            "career": 4,
+            "finance": 3,
+            "love": 4,
+            "health": 5
+          }
+        },
+        "Karka": {
+          "summary": "भावनाएँ गहरी हैं; आंतरिक सामंजस्य को पोषित करें।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 4,
+          "transit_effect": "Challenging",
+          "general": "अग्नि और जल का मिलन आंतरिक तनाव बनाता है। ध्यान से शांति प्राप्त करें।",
+          "career": "संघर्ष से बचें; सहयोगी कार्यों पर ध्यान दें।",
+          "finance": "आकस्मिक खरीदारी हो सकती है; बजट का पालन करें।",
+          "relationships": "संवेदनशील भावनाओं को कोमलता से संभालें; बोलने से अधिक सुनें।",
+          "health": "पाचन संबंधी समस्याओं पर ध्यान दें; हल्का भोजन चुनें।",
+          "lucky_number": 2,
+          "lucky_color": "सफ़ेद",
+          "auspicious_time": "02:00 PM - 04:00 PM",
+          "remedy": "गाय को दूध अर्पित करें और महा मृत्युंजय मंत्र का जप करें।",
+          "ratings": {
+            "career": 3,
             "finance": 2,
             "love": 3,
             "health": 3
           }
         },
-        "Vrischika": {
-          "summary": "Intense focus can lead to breakthroughs.",
-          "moon_sign_position": "Moon in Vrishabha (Taurus)",
-          "chandra_house": 7,
+        "Simha": {
+          "summary": "आपका स्वाभाविक आत्मविश्वास आज उज्ज्वल रूप से चमकेगा।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 5,
           "transit_effect": "Positive",
-          "general": "Your determination attracts respect; channel it into constructive goals.",
-          "career": "Research and deep work are favored; you may uncover valuable insights.",
-          "finance": "Long‑term investments show promise; avoid short‑term speculation.",
-          "relationships": "Passionate conversations deepen intimacy; be honest about feelings.",
-          "health": "Physical stamina is strong; a moderate workout will be beneficial.",
-          "lucky_number": 8,
-          "lucky_color": "Black",
-          "auspicious_time": "03:00 PM - 05:00 PM",
-          "remedy": "Donate black sesame seeds and chant the Maha Mrityunjaya mantra.",
+          "general": "चंद्रमा आपके राशि के साथ संरेखित है, जिससे आकर्षण बढ़ता है। अवसर सहजता से उत्पन्न होते हैं।",
+          "career": "नेतृत्व की भूमिकाएँ स्वाभाविक लगेंगी; बैठकों में पहल करें।",
+          "finance": "मान्यता बोनस ला सकती है; संयमित रूप से जश्न मनाएँ।",
+          "relationships": "रोमांटिक इशारे सराहे जाएंगे; विशेष शाम की योजना बनाएँ।",
+          "health": "ऊर्जा स्तर उच्च है; तेज़ चलना पुनरुज्जीवित करेगा।",
+          "lucky_number": 1,
+          "lucky_color": "स्वर्ण",
+          "auspicious_time": "04:30 PM - 06:30 PM",
+          "remedy": "देवता को लाल फूल अर्पित करें और हनुमान चालीसा का पाठ करें।",
           "ratings": {
             "career": 5,
-            "finance": 4,
+            "finance": 5,
             "love": 5,
+            "health": 4
+          }
+        },
+        "Kanya": {
+          "summary": "कन्या के लिए रचनात्मक और अनुकूल दिन आगे है।",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "कन्या के लिए संतुलित दिन जिसमें स्थिर अवसर हैं। अपनी ऊर्जा को मुख्य प्राथमिकताओं पर केंद्रित करें।",
+          "career": "पेशेवर प्रयास रचनात्मक प्रगति लाते हैं। मेहनत और सहयोगी संवाद बनाए रखें।",
+          "finance": "वित्तीय दृष्टिकोण स्थिर बना रहता है। विचारशील योजना दीर्घकालिक समृद्धि को समर्थन देती है।",
+          "relationships": "व्यक्तिगत संबंधों में गर्मजोशी और पारस्परिक समझ फलती-फूलती है। प्रियजनों के साथ गुणवत्तापूर्ण समय बिताएँ।",
+          "health": "जीवन शक्ति स्थिर है। माइंडफुलनेस का अभ्यास करें और दैनिक जलयोजन व विश्राम को निरंतर रखें।",
+          "lucky_number": 7,
+          "lucky_color": "सुनहरा पीला",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "सुबह सूर्य देव को जल अर्पित करें और ॐ नमः शिवाय का जप करें।",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Tula": {
+          "summary": "कन्या के लिए रचनात्मक और अनुकूल दिन आगे है।",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "कन्या के लिए संतुलित दिन जिसमें स्थिर अवसर हैं। अपनी ऊर्जा को मुख्य प्राथमिकताओं पर केंद्रित करें।",
+          "career": "पेशेवर प्रयास रचनात्मक प्रगति लाते हैं। मेहनत और सहयोगी संवाद बनाए रखें।",
+          "finance": "वित्तीय दृष्टिकोण स्थिर बना रहता है। विचारशील योजना दीर्घकालिक समृद्धि को समर्थन देती है।",
+          "relationships": "व्यक्तिगत संबंधों में गर्मजोशी और पारस्परिक समझ फलती-फूलती है। प्रियजनों के साथ गुणवत्तापूर्ण समय बिताएँ।",
+          "health": "जीवन शक्ति स्थिर है। माइंडफुलनेस का अभ्यास करें और दैनिक जलयोजन व विश्राम को निरंतर रखें।",
+          "lucky_number": 7,
+          "lucky_color": "सुनहरा पीला",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "सुबह सूर्य देव को जल अर्पित करें और ॐ नमः शिवाय का जप करें।",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Vrischika": {
+          "summary": "Constructive and favorable day ahead for Vrischika.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Vrischika. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
             "health": 4
           }
         },

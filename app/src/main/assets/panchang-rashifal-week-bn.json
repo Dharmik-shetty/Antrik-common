@@ -1,0 +1,312 @@
+{
+  "metadata": {
+    "generated_at": "2026-10-20T21:19:08.137507+05:30",
+    "language_code": "bn",
+    "language_name": "Bengali",
+    "timezone": "Asia/Kolkata",
+    "reference_standard": "New Delhi / Central India (IST)",
+    "ayanamsha": "Lahiri / Chitrapaksha",
+    "coverage": {
+      "start_date": "2026-10-20",
+      "end_date": "2026-10-20"
+    }
+  },
+  "days": {
+    "2026-10-20": {
+      "date": "2026-10-20",
+      "day_of_week": "Tuesday",
+      "day_of_week_sanskrit": "মঙ্গলবার",
+      "panchang": {
+        "tithi": {
+          "name": "একাদশী",
+          "paksha": "শুক্ল",
+          "description": "উপবাস ও ভক্তির দিন, আধ্যাত্মিক অনুশীলনের জন্য আদর্শ।"
+        },
+        "nakshatra": {
+          "name": "উত্তর ফাল্গুনী",
+          "ruler": "সূর্য",
+          "pada": 2,
+          "deity": "Ahirbudhnya"
+        },
+        "yoga": {
+          "name": "বিশকম্ভ",
+          "nature": "ভাগ্যকর"
+        },
+        "karana": {
+          "name": "বিষটি"
+        },
+        "calendar": {
+          "vikram_samvat": 2083,
+          "shaka_samvat": 1948,
+          "amanta_month": "কার্তিক",
+          "purnimanta_month": "কার্তিক",
+          "ayana": "Dakshinayana",
+          "ritu": "Sharad"
+        },
+        "timings_ist": {
+          "sunrise": "06:25 AM",
+          "sunset": "05:46 PM",
+          "rahu_kaal": "12:00 PM - 01:30 PM",
+          "abhijit_muhurat": "12:00 PM - 12:28 PM",
+          "brahma_muhurta": "04:49 AM - 06:25 AM"
+        },
+        "moon_sign_today": "সিংহ (সিংহ রাশি)",
+        "festival_or_vrat": "সাধারণ দিন"
+      },
+      "rashifal": {
+        "Mesha": {
+          "summary": "শক্তি প্রবাহিত; নতুন উদ্যোগ শুরু করার জন্য উপযুক্ত সময়।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "চন্দ্রের অগ্নিময় প্রভাব আপনার আত্মাকে উদ্দীপ্ত করে। আত্মবিশ্বাস ও আশাবাদ উচ্চে।",
+          "career": "দৃঢ় ধারণা কাজের জায়গায় ভালভাবে গ্রহণ হবে। সহযোগী প্রকল্পে নেতৃত্ব নিন।",
+          "finance": "অপ্রত্যাশিত লাভ আসতে পারে; বুদ্ধিমানের সঙ্গে বিনিয়োগ করুন তবে জল্পনা এড়িয়ে চলুন।",
+          "relationships": "উদ্দীপ্ত সাক্ষাৎসমূহ অনুকূল; প্রিয়জনের সঙ্গে মুক্তভাবে যোগাযোগ করুন।",
+          "health": "শারীরিক সহনশক্তি শক্তিশালী—তীব্র ব্যায়াম করুন।",
+          "lucky_number": 3,
+          "lucky_color": "লাল",
+          "auspicious_time": "06:30 AM - 08:30 AM",
+          "remedy": "ঘি দীপ জ্বালিয়ে গায়ত্রি মন্ত্র জপ করুন।",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Vrishabha": {
+          "summary": "ধীরগতির অগ্রগতি দিনকে চিহ্নিত করে; ব্যবহারিক কাজগুলোর উপর মনোযোগ দিন।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 2,
+          "transit_effect": "Neutral",
+          "general": "চন্দ্রের অগ্নি আপনার রুটিনে ঝলক যোগ করে। ধৈর্য এটি ব্যবহার করতে সাহায্য করবে।",
+          "career": "বিস্তারিত কাজ প্রশংসা পায়। তাড়াহুড়ো সিদ্ধান্ত এড়িয়ে চলুন।",
+          "finance": "স্থিতিশীল আয় অব্যাহত; একটি ছোট সঞ্চয় পরিকল্পনা উপকারী হতে পারে।",
+          "relationships": "সুবিধাজনক কথোপকথন বন্ধনকে গভীর করে। সঙ্গীর প্রতি কৃতজ্ঞতা প্রকাশ করুন।",
+          "health": "সুষম খাবার বজায় রাখুন; অতিরিক্ত ভোগ এড়িয়ে চলুন।",
+          "lucky_number": 5,
+          "lucky_color": "সবুজ",
+          "auspicious_time": "09:00 AM - 11:00 AM",
+          "remedy": "পিপল গাছকে জল অর্পণ করুন এবং বিষ্ণু সহস্রনামা পাঠ করুন।",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 3,
+            "health": 4
+          }
+        },
+        "Mithuna": {
+          "summary": "কৌতূহল শীর্ষে; নতুন শিক্ষার পথ অনুসন্ধান করুন।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 3,
+          "transit_effect": "Positive",
+          "general": "বৌদ্ধিক অগ্নি জ্বলে, অধ্যয়ন ও যোগাযোগকে উৎসাহিত করে। সামাজিক মিথস্ক্রিয়া প্রাণবন্ত।",
+          "career": "নেটওয়ার্কিং নতুন সুযোগ এনে দেয়। আত্মবিশ্বাসের সঙ্গে ধারণা শেয়ার করুন।",
+          "finance": "সৃজনশীল উদ্যোগের মাধ্যমে স্বল্পমেয়াদী লাভ সম্ভব।",
+          "relationships": "খেলাধুলা কথোপকথন বন্ধুত্বকে শক্তিশালী করে; কথাবার্তা হালকা রাখুন।",
+          "health": "মনের-শরীরের কার্যকলাপ যেমন যোগ বিশেষভাবে ফলপ্রসূ।",
+          "lucky_number": 7,
+          "lucky_color": "হলুদ",
+          "auspicious_time": "11:00 AM - 01:00 PM",
+          "remedy": "ডান কনুইতে হলুদ থ্রেড পরুন এবং ওঁ নমঃ শিবায় মন্ত্র জপ করুন।",
+          "ratings": {
+            "career": 4,
+            "finance": 3,
+            "love": 4,
+            "health": 5
+          }
+        },
+        "Karka": {
+          "summary": "অনুভূতি গভীর; অন্তর্দৈহিক সাদৃশ্য লালন করুন।",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 4,
+          "transit_effect": "Challenging",
+          "general": "অগ্নি ও জল মিলিত হয়ে অন্তর্দ্বন্দ্ব সৃষ্টি করে। ধ্যানের মাধ্যমে শান্তি অনুসন্ধান করুন।",
+          "career": "সংঘর্ষ এড়িয়ে চলুন; সহযোগী কাজের উপর মনোযোগ দিন।",
+          "finance": "আকস্মিক ক্রয় হতে পারে; বাজেট মেনে চলুন।",
+          "relationships": "সংবেদনশীল অনুভূতি কোমলভাবে পরিচালনা করুন; কথা বলার চেয়ে বেশি শোনুন।",
+          "health": "পাচনতন্ত্রের সমস্যার দিকে লক্ষ্য রাখুন; হালকা খাবার বেছে নিন।",
+          "lucky_number": 2,
+          "lucky_color": "সাদা",
+          "auspicious_time": "02:00 PM - 04:00 PM",
+          "remedy": "গাভীকে দুধ দান করুন এবং মহা মৃতিউনজয় মন্ত্র জপ করুন।",
+          "ratings": {
+            "career": 3,
+            "finance": 2,
+            "love": 3,
+            "health": 3
+          }
+        },
+        "Simha": {
+          "summary": "Your natural confidence shines brightly today.",
+          "moon_sign_position": "Moon in Simha (Uttara Phalguni)",
+          "chandra_house": 5,
+          "transit_effect": "Positive",
+          "general": "The Moon aligns with your sign, amplifying charisma. Opportunities arise effortlessly.",
+          "career": "Leadership roles feel natural; take initiative in meetings.",
+          "finance": "Recognition may bring bonuses; celebrate modestly.",
+          "relationships": "Romantic gestures are well received; plan a special evening.",
+          "health": "Energy levels are high; a brisk walk will be revitalizing.",
+          "lucky_number": 1,
+          "lucky_color": "Gold",
+          "auspicious_time": "04:30 PM - 06:30 PM",
+          "remedy": "Offer red flowers to a deity and recite the Hanuman Chalisa.",
+          "ratings": {
+            "career": 5,
+            "finance": 5,
+            "love": 5,
+            "health": 4
+          }
+        },
+        "Kanya": {
+          "summary": "Constructive and favorable day ahead for Kanya.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Kanya. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Tula": {
+          "summary": "Constructive and favorable day ahead for Tula.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Tula. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Vrischika": {
+          "summary": "Constructive and favorable day ahead for Vrischika.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Vrischika. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Dhanu": {
+          "summary": "Constructive and favorable day ahead for Dhanu.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Dhanu. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Makara": {
+          "summary": "Constructive and favorable day ahead for Makara.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Makara. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Kumbha": {
+          "summary": "Constructive and favorable day ahead for Kumbha.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Kumbha. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Meena": {
+          "summary": "Constructive and favorable day ahead for Meena.",
+          "moon_sign_position": "Favorable transit position",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "A balanced day with steady opportunities for Meena. Focus your energy on core priorities.",
+          "career": "Professional efforts yield constructive progress. Maintain diligence and collaborative communication.",
+          "finance": "Financial outlook remains stable. Thoughtful planning supports long-term prosperity.",
+          "relationships": "Warmth and mutual understanding flourish in personal ties. Spend quality time with loved ones.",
+          "health": "Vitality is steady. Practice mindfulness and maintain consistent daily hydration and rest.",
+          "lucky_number": 7,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "10:00 AM – 11:30 AM",
+          "remedy": "Offer water to Surya Dev in the morning and chant Om Namah Shivaya.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        }
+      }
+    }
+  }
+}
