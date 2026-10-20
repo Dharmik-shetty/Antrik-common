@@ -3,10 +3,12 @@ generate_week.py
 Maintains a rolling forecast of authentic Indian Panchanga and Vedic Rashifal
 in 8 languages using Gemini 3.8 Flash.
 
-Quota Safety & Rolling Window:
-- Cold start / First run: Generates Today & Tomorrow (16 requests <= 20 RPD free tier limit).
-- Daily runs: Generates Tomorrow's advance forecast (8 requests <= 20 RPD free tier limit).
-- All astrological facts, lucky numbers, ratings, and timings are 100% synchronized.
+Resumable Architecture:
+- True State Persistence: Saves each language to disk immediately upon completion.
+- Exact Resumption: If a network/503 spike interrupts the run, the next attempt
+  checks disk, skips already-completed languages (0 API calls wasted), and resumes
+  strictly from the missing language.
+- Quota Safety: 8 calls per full day. Max 2 days per run (<= 16 calls <= 20 RPD free tier limit).
 """
 
 import copy
@@ -48,7 +50,6 @@ RASHIS = [
     "Dhanu", "Makara", "Kumbha", "Meena"
 ]
 
-# Spacing between Gemini calls to stay comfortably under 15 RPM
 REQUEST_SPACING_SECONDS = 5.0
 
 # ---------------------------------------------------------
@@ -210,9 +211,11 @@ TRANSLATION_SCHEMA = {
 }
 
 # ---------------------------------------------------------
-# 3. API Invocation with Exponential Backoff
+# 3. API Invocation with Patient Backoff
 # ---------------------------------------------------------
-def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retries: int = 4) -> dict:
+BACKOFF_DELAYS = [10, 20, 35, 50, 65]
+
+def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retries: int = 5) -> dict:
     for attempt in range(max_retries):
         try:
             response = client.models.generate_content(
@@ -226,10 +229,11 @@ def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retrie
             )
             return json.loads(response.text)
         except Exception as e:
-            wait_time = (2 ** attempt) * 5  # 5s, 10s, 20s, 40s
-            print(f"   [!] {task_name} attempt {attempt + 1} encountered an error: {e}")
+            delay_idx = min(attempt, len(BACKOFF_DELAYS) - 1)
+            wait_time = BACKOFF_DELAYS[delay_idx]
+            print(f"   [!] {task_name} attempt {attempt + 1}/{max_retries} encountered: {e}")
             if attempt < max_retries - 1:
-                print(f"       Backing off for {wait_time}s before retrying...")
+                print(f"       Waiting {wait_time}s for Google server capacity spike to clear...")
                 time.sleep(wait_time)
             else:
                 raise RuntimeError(f"Failed {task_name} after {max_retries} attempts.")
@@ -308,8 +312,28 @@ Source JSON:
     return localized_day
 
 # ---------------------------------------------------------
-# 4. Storage & Pruning
+# 4. Storage & Incremental Saving
 # ---------------------------------------------------------
+def save_dataset_file(output_dir: Path, code: str, dataset: dict):
+    """Saves each language immediately to disk so progress is never lost."""
+    ist = ZoneInfo("Asia/Kolkata")
+    dataset["metadata"]["generated_at"] = datetime.now(ist).isoformat()
+    if dataset["days"]:
+        dataset["metadata"]["coverage"] = {
+            "start_date": min(dataset["days"].keys()),
+            "end_date": max(dataset["days"].keys())
+        }
+
+    lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
+    lang_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    if code == "en":
+        master_file = output_dir / "panchang-rashifal-week.json"
+        master_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+        asset_file = Path("app/src/main/assets/panchang-rashifal-week.json")
+        if asset_file.parent.exists():
+            asset_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+
 def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
     datasets = {}
     cutoff_date = (today - timedelta(days=1)).strftime("%Y-%m-%d")
@@ -323,16 +347,18 @@ def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
 
         if file_path.exists():
             try:
-                data = json.loads(file_path.read_text(encoding="utf-8"))
-                valid_days = {
-                    d: v for d, v in data.get("days", {}).items()
-                    if d >= cutoff_date
-                }
-                data["days"] = valid_days
-                datasets[code] = data
-                continue
+                raw_text = file_path.read_text(encoding="utf-8").strip()
+                if raw_text:
+                    data = json.loads(raw_text)
+                    valid_days = {
+                        d: v for d, v in data.get("days", {}).items()
+                        if d >= cutoff_date
+                    }
+                    data["days"] = valid_days
+                    datasets[code] = data
+                    continue
             except Exception as e:
-                print(f"Warning: Failed to parse {file_path}: {e}")
+                print(f"Notice: Initializing fresh state for {file_path.name} ({e})")
 
         datasets[code] = {
             "metadata": {
@@ -357,71 +383,75 @@ def main():
     tomorrow = today + timedelta(days=1)
 
     print(f"============================================================")
-    print(f" Rolling Daily Panchang & Rashifal Generator (Gemini Flash) ")
+    print(f" Resumable Daily Panchang & Rashifal Generator (Gemini Flash)")
     print(f" Current Date (IST): {today.isoformat()} | Advance Target: {tomorrow.isoformat()}")
-    print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)")
+    print(f" Languages: {', '.join(LANGUAGES.values())} (8 total)")
     print(f"============================================================\n")
 
     output_dir = Path("data")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     datasets = load_existing_datasets(output_dir, today)
-    en_days = datasets["en"]["days"]
 
+    # Resumption Detection:
+    # A date is complete ONLY if it exists in ALL 8 languages.
     target_dates = []
-    if today.strftime("%Y-%m-%d") not in en_days:
-        target_dates.append(today)
-    if tomorrow.strftime("%Y-%m-%d") not in en_days:
-        target_dates.append(tomorrow)
+    for d in [today, tomorrow]:
+        date_str = d.strftime("%Y-%m-%d")
+        is_fully_covered = all(date_str in datasets[code]["days"] for code in LANGUAGES.keys())
+        if not is_fully_covered:
+            target_dates.append(d)
 
     if not target_dates:
-        print(f" [✓] Today ({today}) and Tomorrow ({tomorrow}) already exist.")
+        print(f" [✓] Both Today ({today}) and Tomorrow ({tomorrow}) are 100% complete across all 8 languages.")
         day_plus_2 = today + timedelta(days=2)
-        if day_plus_2.strftime("%Y-%m-%d") not in en_days:
+        date_str_plus_2 = day_plus_2.strftime("%Y-%m-%d")
+        if not all(date_str_plus_2 in datasets[code]["days"] for code in LANGUAGES.keys()):
             target_dates.append(day_plus_2)
 
+    # Cap to max 2 dates per run to stay strictly <= 16 calls
     target_dates = target_dates[:2]
 
-    print(f"Dates to generate this run ({len(target_dates)} day(s)): {[d.isoformat() for d in target_dates]}")
+    if not target_dates:
+        print(" [✓] Everything is already up to date. No API calls required.")
+        return
+
+    print(f"Dates to process this run ({len(target_dates)} day(s)): {[d.isoformat() for d in target_dates]}")
     indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
 
     for target_date in target_dates:
         date_str = target_date.strftime("%Y-%m-%d")
         print(f"\n>>> Processing Date: {date_str} ({target_date.strftime('%A')})")
 
-        print(f" [+] Generating Base English for {date_str}...")
-        english_day = generate_base_day(target_date)
-        datasets["en"]["days"][date_str] = english_day
-        time.sleep(REQUEST_SPACING_SECONDS)
+        # 1. Base English Generation (Skip if already on disk)
+        if date_str not in datasets["en"]["days"]:
+            print(f" [+] Generating Base English for {date_str}...")
+            english_day = generate_base_day(target_date)
+            datasets["en"]["days"][date_str] = english_day
+            save_dataset_file(output_dir, "en", datasets["en"])
+            print(f"     [✓] English saved to disk.")
+            time.sleep(REQUEST_SPACING_SECONDS)
+        else:
+            print(f"     [✓] English already present on disk for {date_str} (0 API calls).")
+            english_day = datasets["en"]["days"][date_str]
 
+        # 2. Translate into 7 Indic Languages (Skip any language already on disk)
         for code, name in indic_langs.items():
+            if date_str in datasets[code]["days"]:
+                print(f"     [✓] {name} ({code}) already present on disk (0 API calls).")
+                continue
+
             print(f" -> Localizing {date_str} to {name} ({code})...")
             localized_day = translate_day(english_day, lang_code=code, lang_name=name)
             datasets[code]["days"][date_str] = localized_day
+            
+            # Immediately persist to disk
+            save_dataset_file(output_dir, code, datasets[code])
+            print(f"     [✓] {name} saved to disk.")
             time.sleep(REQUEST_SPACING_SECONDS)
 
-    print("\n>>> Saving updated datasets...")
-    for code, dataset in datasets.items():
-        dataset["metadata"]["generated_at"] = datetime.now(ist).isoformat()
-        dataset["metadata"]["coverage"] = {
-            "start_date": min(dataset["days"].keys()) if dataset["days"] else today.isoformat(),
-            "end_date": max(dataset["days"].keys()) if dataset["days"] else today.isoformat()
-        }
-
-        lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
-        lang_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f" [✓] Saved {LANGUAGES[code]} ({len(dataset['days'])} days) -> {lang_file}")
-
-    master_file = output_dir / "panchang-rashifal-week.json"
-    master_file.write_text(json.dumps(datasets["en"], ensure_ascii=False, indent=2), encoding="utf-8")
-
-    asset_file = Path("app/src/main/assets/panchang-rashifal-week.json")
-    if asset_file.parent.exists():
-        asset_file.write_text(json.dumps(datasets["en"], ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f" [✓] Synchronized Android asset: {asset_file}")
-
     print("\n============================================================")
-    print(" Successfully updated rolling forecast for all 8 languages!")
+    print(" Complete! All datasets are 100% updated and saved to disk.")
     print("============================================================")
 
 if __name__ == "__main__":
