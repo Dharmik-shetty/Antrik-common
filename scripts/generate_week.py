@@ -8,7 +8,7 @@ Resumable Architecture:
 - Exact Resumption: If a network/503 spike interrupts the run, the next attempt
   checks disk, skips already-completed languages (0 API calls wasted), and resumes
   strictly from the missing language.
-- Quota Safety: 8 calls per full day. Max 2 days per run (<= 16 calls <= 20 RPD free tier limit).
+- Auto-Folder Creation: Guarantees that data/ and app/src/main/assets/ are always created.
 """
 
 import copy
@@ -330,9 +330,15 @@ def save_dataset_file(output_dir: Path, code: str, dataset: dict):
     if code == "en":
         master_file = output_dir / "panchang-rashifal-week.json"
         master_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        # Always guarantee parent directory exists before writing Android asset
         asset_file = Path("app/src/main/assets/panchang-rashifal-week.json")
-        if asset_file.parent.exists():
+        try:
+            asset_file.parent.mkdir(parents=True, exist_ok=True)
             asset_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"     [✓] Synchronized Android asset: {asset_file}")
+        except Exception as e:
+            print(f"     [!] Notice: Could not sync Android asset ({e})")
 
 def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
     datasets = {}
@@ -394,7 +400,6 @@ def main():
     datasets = load_existing_datasets(output_dir, today)
 
     # Resumption Detection:
-    # A date is complete ONLY if it exists in ALL 8 languages.
     target_dates = []
     for d in [today, tomorrow]:
         date_str = d.strftime("%Y-%m-%d")
@@ -409,7 +414,6 @@ def main():
         if not all(date_str_plus_2 in datasets[code]["days"] for code in LANGUAGES.keys()):
             target_dates.append(day_plus_2)
 
-    # Cap to max 2 dates per run to stay strictly <= 16 calls
     target_dates = target_dates[:2]
 
     if not target_dates:
@@ -445,7 +449,6 @@ def main():
             localized_day = translate_day(english_day, lang_code=code, lang_name=name)
             datasets[code]["days"][date_str] = localized_day
             
-            # Immediately persist to disk
             save_dataset_file(output_dir, code, datasets[code])
             print(f"     [✓] {name} saved to disk.")
             time.sleep(REQUEST_SPACING_SECONDS)
