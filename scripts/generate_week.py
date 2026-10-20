@@ -1,9 +1,11 @@
 """
 generate_today.py
 One-time initialization script to generate authentic Indian Panchanga and
-Vedic Rashifal for TODAY across all 8 languages using Meta Llama 3.3 70B on Groq Cloud.
+Vedic Rashifal for TODAY across all 8 languages using OpenAI GPT-OSS on Groq Cloud.
 
 Features:
+- Primary Model: openai/gpt-oss-120b (120 Billion parameters frontier model) with
+  fallback to openai/gpt-oss-20b.
 - Targets strictly TODAY (8 API calls total: 1 English base + 7 regional translations).
 - 100% Native Script Localization: Translates all Panchang technical terms (Tithi name,
   Paksha, Nakshatra, Ruler, Yoga, Nature, Karana, Sanskrit Day, Moon Sign, Month)
@@ -40,7 +42,9 @@ if not api_key:
     sys.exit(1)
 
 client = Groq(api_key=api_key)
-MODEL_NAME = "llama-3.3-70b-versatile"
+
+# Active Groq models: Flagship 120B model with fallback to high-speed 20B
+MODELS_TO_TRY = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]
 
 LANGUAGES = {
     "en": "English",
@@ -62,36 +66,45 @@ RASHIS = [
 REQUEST_SPACING_SECONDS = 3.0
 
 # ---------------------------------------------------------
-# 2. API Invocation with Retry
+# 2. API Invocation with Multi-Model Fallback
 # ---------------------------------------------------------
 def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
-    for attempt in range(max_retries):
-        try:
-            response = client.chat.completions.create(
-                model=MODEL_NAME,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.2
-            )
-            raw_text = response.choices[0].message.content
-            return json.loads(raw_text)
-        except Exception as e:
-            err_msg = str(e)
-            if "rate_limit_exceeded" in err_msg or "429" in err_msg:
-                print(f"   [!] Rate limit reached for {task_name}. Waiting 25s...")
-                time.sleep(25)
-                continue
+    last_error = None
+    for model_name in MODELS_TO_TRY:
+        for attempt in range(max_retries):
+            try:
+                response = client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    response_format={"type": "json_object"},
+                    temperature=0.2
+                )
+                raw_text = response.choices[0].message.content
+                return json.loads(raw_text)
+            except Exception as e:
+                last_error = e
+                err_msg = str(e)
+                if "rate_limit_exceeded" in err_msg or "429" in err_msg:
+                    print(f"   [!] Rate limit on {model_name}. Waiting 20s...")
+                    time.sleep(20)
+                    continue
 
-            delay = 5 * (attempt + 1)
-            print(f"   [!] {task_name} attempt {attempt + 1}/{max_retries} encountered: {e}")
-            if attempt < max_retries - 1:
-                print(f"       Waiting {delay}s before retrying...")
-                time.sleep(delay)
-            else:
-                raise RuntimeError(f"Failed {task_name} after {max_retries} attempts.")
+                if "model_not_found" in err_msg or "404" in err_msg:
+                    print(f"   [!] Model {model_name} not available. Trying fallback model...")
+                    break
+
+                delay = 5 * (attempt + 1)
+                print(f"   [!] {task_name} ({model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}")
+                if attempt < max_retries - 1:
+                    print(f"       Waiting {delay}s before retrying...")
+                    time.sleep(delay)
+                else:
+                    print(f"       Switching to alternative model...")
+
+    raise RuntimeError(f"All models exhausted for {task_name}. Last error: {last_error}")
 
 def generate_base_day(target_date: datetime.date) -> dict:
     date_str = target_date.strftime("%Y-%m-%d")
@@ -307,123 +320,3 @@ def save_dataset_file(output_dir: Path, code: str, dataset: dict):
     """Saves each language immediately to disk so progress is never lost."""
     ist = ZoneInfo("Asia/Kolkata")
     dataset["metadata"]["generated_at"] = datetime.now(ist).isoformat()
-    if dataset["days"]:
-        dataset["metadata"]["coverage"] = {
-            "start_date": min(dataset["days"].keys()),
-            "end_date": max(dataset["days"].keys())
-        }
-
-    lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
-    lang_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
-
-    if code == "en":
-        master_file = output_dir / "panchang-rashifal-week.json"
-        master_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
-
-        # Always guarantee parent directory exists before writing Android asset
-        asset_file = Path("app/src/main/assets/panchang-rashifal-week.json")
-        try:
-            asset_file.parent.mkdir(parents=True, exist_ok=True)
-            asset_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"     [OK] Synchronized Android asset: {asset_file}")
-        except Exception as e:
-            print(f"     [!] Notice: Could not sync Android asset ({e})")
-
-def load_existing_datasets(output_dir: Path) -> dict:
-    datasets = {}
-
-    for code, name in LANGUAGES.items():
-        file_path = output_dir / f"panchang-rashifal-week-{code}.json"
-        if code == "en" and not file_path.exists():
-            alt_path = output_dir / "panchang-rashifal-week.json"
-            if alt_path.exists():
-                file_path = alt_path
-
-        if file_path.exists():
-            try:
-                raw_text = file_path.read_text(encoding="utf-8").strip()
-                if raw_text:
-                    data = json.loads(raw_text)
-                    datasets[code] = data
-                    continue
-            except Exception as e:
-                print(f"Notice: Initializing fresh state for {file_path.name} ({e})")
-
-        datasets[code] = {
-            "metadata": {
-                "generated_at": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(),
-                "language_code": code,
-                "language_name": name,
-                "timezone": "Asia/Kolkata",
-                "reference_standard": "New Delhi / Central India (IST)",
-                "ayanamsha": "Lahiri / Chitrapaksha"
-            },
-            "days": {}
-        }
-
-    return datasets
-
-# ---------------------------------------------------------
-# 4. Main Pipeline for TODAY ONLY
-# ---------------------------------------------------------
-def main():
-    ist = ZoneInfo("Asia/Kolkata")
-    today = datetime.now(ist).date()
-    date_str = today.strftime("%Y-%m-%d")
-
-    print(f"============================================================")
-    print(f" One-Time Panchang & Rashifal Generator (Groq Llama 3.3 70B)")
-    print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})")
-    print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)")
-    print(f" Speed & Reliability: Groq LPUs (Zero 503 capacity outages)")
-    print(f"============================================================\n")
-
-    output_dir = Path("data")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    datasets = load_existing_datasets(output_dir)
-
-    # Check if TODAY is already 100% complete across all 8 languages
-    is_fully_covered = all(date_str in datasets[code]["days"] for code in LANGUAGES.keys())
-    if is_fully_covered:
-        print(f" [OK] Today ({date_str}) is already 100% complete across all 8 languages.")
-        for code in LANGUAGES.keys():
-            save_dataset_file(output_dir, code, datasets[code])
-        print(" [OK] Datasets verified. 0 API calls required.")
-        return
-
-    print(f"Generating Today: {date_str} ({today.strftime('%A')})")
-    indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
-
-    # 1. Base English Generation (Skip if already present)
-    if date_str not in datasets["en"]["days"]:
-        print(f" [+] Generating Base English for today {date_str}...")
-        english_day = generate_base_day(today)
-        datasets["en"]["days"][date_str] = english_day
-        save_dataset_file(output_dir, "en", datasets["en"])
-        print(f"     [OK] English saved to disk.")
-        time.sleep(REQUEST_SPACING_SECONDS)
-    else:
-        print(f"     [OK] English already present on disk for {date_str} (0 API calls).")
-        english_day = datasets["en"]["days"][date_str]
-
-    # 2. Translate into 7 Indic Languages (Skip any language already on disk)
-    for code, name in indic_langs.items():
-        if date_str in datasets[code]["days"]:
-            print(f"     [OK] {name} ({code}) already present on disk (0 API calls).")
-            continue
-
-        print(f" -> Localizing {date_str} to {name} ({code})...")
-        localized_day = translate_day(english_day, lang_code=code, lang_name=name)
-        datasets[code]["days"][date_str] = localized_day
-        
-        save_dataset_file(output_dir, code, datasets[code])
-        print(f"     [OK] {name} saved to disk.")
-        time.sleep(REQUEST_SPACING_SECONDS)
-
-    print("\n============================================================")
-    print(f" Success! Today ({date_str}) is 100% generated across all 8 languages.")
-    print("============================================================")
-
-if __name__ == "__main__":
-    main()
