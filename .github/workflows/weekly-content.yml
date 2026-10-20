@@ -27,11 +27,26 @@ jobs:
         run: |
           pip install google-genai
 
-      - name: Generate Daily Panchang & Rashifal
+      - name: Generate Daily Panchang & Rashifal (with auto-resume retry)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python scripts/generate_week.py
+          for attempt in 1 2 3; do
+            echo "============================================================"
+            echo " Execution Attempt $attempt of 3"
+            echo "============================================================"
+            if python scripts/generate_week.py; then
+              echo "Generation fully complete!"
+              break
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Script paused. Waiting 90s for Google server demand spike to clear before resuming from where it left off..."
+              sleep 90
+            else
+              echo "Exhausted all 3 attempts."
+              exit 1
+            fi
+          done
 
       - name: Commit and push updated JSON
         run: |
