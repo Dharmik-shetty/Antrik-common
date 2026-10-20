@@ -3,7 +3,7 @@ name: Daily Panchang & Rashifal Update
 on:
   schedule:
     # Runs at 18:30 UTC every day (which is 00:00 / 12:00 AM IST)
-    - cron: "30 18 * * *"
+    - cron: "03 05 * * *"
   workflow_dispatch:
 
 permissions:
