@@ -1,17 +1,16 @@
 """
-generate_week.py
-Maintains a rolling forecast of authentic Indian Panchanga and Vedic Rashifal
-in 8 languages using Gemini 3.8 Flash.
+generate_today.py
+One-time initialization script to generate authentic Indian Panchanga and
+Vedic Rashifal for TODAY across all 8 languages using Gemini 3.8 Flash.
 
 Features:
-- Complete Native Localization: Translates all Panchang technical terms (Tithi name,
+- Targets strictly TODAY (8 API calls total: 1 English base + 7 regional translations).
+- Safe within the 20 Requests-Per-Day (RPD) free-tier limit.
+- 100% Native Script Localization: Translates all Panchang technical terms (Tithi name,
   Paksha, Nakshatra, Ruler, Yoga, Nature, Karana, Sanskrit Day, Moon Sign, Month)
-  directly into the regional script (Kannada, Hindi, Bengali, Tamil, Telugu, etc.).
+  directly into the regional Indic scripts (Kannada, Hindi, Bengali, Tamil, Telugu, etc.).
 - True State Persistence: Saves each language to disk immediately upon completion.
-- Exact Resumption: Skips already-completed languages (0 API calls wasted) and resumes
-  strictly from the missing language.
-- Auto-Folder Creation: Guarantees that data/ and app/src/main/assets/ are always created.
-- Quota Safety: 8 calls per full day. Max 2 days per run (<= 16 calls <= 20 RPD free tier limit).
+- Exact Resumption: Skips any language already present on disk (0 calls wasted).
 """
 
 import copy
@@ -19,11 +18,18 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 from google import genai
 from google.genai import types
+
+# Ensure UTF-8 output across all operating systems
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 # ---------------------------------------------------------
 # 1. Configuration & Client Setup
@@ -31,6 +37,7 @@ from google.genai import types
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     print("Error: GEMINI_API_KEY environment variable is missing.", file=sys.stderr)
+    print("Please set it via: export GEMINI_API_KEY='your-key' or $env:GEMINI_API_KEY='your-key'", file=sys.stderr)
     sys.exit(1)
 
 client = genai.Client(api_key=api_key)
@@ -111,7 +118,7 @@ DAY_SCHEMA = {
                         "ayana": {"type": "STRING"},
                         "ritu": {"type": "STRING"}
                     },
-                    "required": ["vikram_samvat", "amanta_month", "purnimanta_month", "ayana"]
+                    "required": ["vikram_samvat", "shaka_samvat", "amanta_month", "purnimanta_month", "ayana", "ritu"]
                 },
                 "timings_ist": {
                     "type": "OBJECT",
@@ -122,12 +129,12 @@ DAY_SCHEMA = {
                         "abhijit_muhurat": {"type": "STRING"},
                         "brahma_muhurta": {"type": "STRING"}
                     },
-                    "required": ["sunrise", "sunset", "rahu_kaal", "abhijit_muhurat"]
+                    "required": ["sunrise", "sunset", "rahu_kaal", "abhijit_muhurat", "brahma_muhurta"]
                 },
                 "moon_sign_today": {"type": "STRING"},
                 "festival_or_vrat": {"type": "STRING"}
             },
-            "required": ["tithi", "nakshatra", "yoga", "karana", "calendar", "timings_ist"]
+            "required": ["tithi", "nakshatra", "yoga", "karana", "calendar", "timings_ist", "moon_sign_today", "festival_or_vrat"]
         },
         "rashifal": {
             "type": "OBJECT",
@@ -136,6 +143,7 @@ DAY_SCHEMA = {
                     "type": "OBJECT",
                     "properties": {
                         "summary": {"type": "STRING"},
+                        "moon_sign_position": {"type": "STRING"},
                         "chandra_house": {"type": "INTEGER"},
                         "transit_effect": {"type": "STRING"},
                         "general": {"type": "STRING"},
@@ -172,7 +180,6 @@ DAY_SCHEMA = {
     "required": ["date", "day_of_week", "panchang", "rashifal"]
 }
 
-# Translation Schema: Includes all Panchang elements for native script display
 TRANSLATION_SCHEMA = {
     "type": "OBJECT",
     "properties": {
@@ -231,9 +238,9 @@ TRANSLATION_SCHEMA = {
 # ---------------------------------------------------------
 # 3. API Invocation with Patient Backoff
 # ---------------------------------------------------------
-BACKOFF_DELAYS = [10, 20, 35, 50, 65]
+BACKOFF_DELAYS = [15, 30, 45]
 
-def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retries: int = 5) -> dict:
+def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retries: int = 3) -> dict:
     for attempt in range(max_retries):
         try:
             response = client.models.generate_content(
@@ -247,6 +254,13 @@ def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retrie
             )
             return json.loads(response.text)
         except Exception as e:
+            err_msg = str(e)
+            if "RESOURCE_EXHAUSTED" in err_msg or "429" in err_msg:
+                print(f"\n[!] Daily Gemini Free-Tier Quota Limit Reached (429 RESOURCE_EXHAUSTED).")
+                print(f"    Google will reset the quota at 00:00 UTC (05:30 AM IST).")
+                print(f"    All languages generated so far are safely saved to disk.")
+                raise SystemExit(0)
+
             delay_idx = min(attempt, len(BACKOFF_DELAYS) - 1)
             wait_time = BACKOFF_DELAYS[delay_idx]
             print(f"   [!] {task_name} attempt {attempt + 1}/{max_retries} encountered: {e}")
@@ -302,31 +316,33 @@ def translate_day(day_data: dict, lang_code: str, lang_name: str) -> dict:
         },
         "rashifal": {
             rashi: {
-                k: day_data["rashifal"][rashi][k]
-                for k in [
-                    "summary", "general", "career", "finance",
-                    "relationships", "health", "lucky_color",
-                    "auspicious_time", "remedy"
-                ]
+                "summary": day_data["rashifal"][rashi].get("summary", ""),
+                "general": day_data["rashifal"][rashi].get("general", ""),
+                "career": day_data["rashifal"][rashi].get("career", ""),
+                "finance": day_data["rashifal"][rashi].get("finance", ""),
+                "relationships": day_data["rashifal"][rashi].get("relationships", ""),
+                "health": day_data["rashifal"][rashi].get("health", ""),
+                "lucky_color": day_data["rashifal"][rashi].get("lucky_color", ""),
+                "auspicious_time": day_data["rashifal"][rashi].get("auspicious_time", ""),
+                "remedy": day_data["rashifal"][rashi].get("remedy", "")
             }
             for rashi in RASHIS
         }
     }
 
-    prompt = f"""You are an expert Vedic Astrologer and linguist specializing in {lang_name} ({lang_code}).
-Translate and culturally adapt the following daily Panchanga and Rashifal text from English into authentic {lang_name}.
+    prompt = f"""You are an expert Vedic astrologer and classical linguist fluent in {lang_name} ({lang_code}).
+Translate and localize the astrological text below into authentic, elegant, natural {lang_name}.
 
-Crucial Localization Rules:
-1. Write natively in {lang_name} script for ALL fields.
-2. Panchanga Terms (Must be written in {lang_name} script, NOT English):
-   - tithi_name (e.g., 'ದಶಮಿ' in Kannada, 'দশমী' in Bengali, 'दशमी' in Hindi)
+CRITICAL RULES:
+1. Translate EVERYTHING entirely into the native {lang_name} script. Do NOT leave English words or English alphabets.
+2. Translate all technical Vedic terms directly into {lang_name} script:
+   - tithi_name (e.g., 'ದ್ವಾದಶಿ' in Kannada, 'দ্বাদশী' in Bengali, 'द्वादशी' in Hindi)
    - tithi_paksha (e.g., 'ಶುಕ್ಲ ಪಕ್ಷ' in Kannada, 'শুক্ল পক্ষ' in Bengali, 'शुक्ल पक्ष' in Hindi)
-   - nakshatra_name (e.g., 'ಶ್ರವಣ' in Kannada, 'শ্রবণা' in Bengali, 'श्रवण' in Hindi)
-   - nakshatra_ruler (e.g., 'ಚಂದ್ರ' in Kannada, 'চন্দ্র' in Bengali, 'चन्द्र' in Hindi)
-   - yoga_name (e.g., 'ಧೃತಿ' in Kannada, 'ಧೃತಿ' in Bengali, 'धृति' in Hindi)
-   - yoga_nature (e.g., 'ಶುಭ' / Auspicious in {lang_name} script)
-   - karana_name (e.g., 'ತೈತಿಲ' in Kannada, 'তৈতিল' in Bengali, 'तैमिला' in Hindi)
-   - month_name (e.g., 'ಆಶ್ವಯುಜ' in Kannada, 'আশ্বিন' in Bengali, 'आश्विन' in Hindi)
+   - nakshatra_name (e.g., 'ಪೂರ್ವಭಾದ್ರಪದ' in Kannada, 'পূর্বভাদ্রপদ' in Bengali, 'पूर्वाभाद्रपद' in Hindi)
+   - nakshatra_ruler (e.g., 'ಗುರು' in Kannada, 'বৃহস্পতি' in Bengali, 'बृहस्पति' in Hindi)
+   - yoga_name & nature (e.g., 'ಧ್ರುವ' / 'ಶುಭ' in Kannada, 'ধ್ರುವ' / 'শুভ' in Bengali)
+   - karana_name (e.g., 'ಬಾಲವ' in Kannada, 'বালব' in Bengali)
+   - month_name (e.g., 'ಆಶ್ವಯುಜ' in Kannada, 'আশ্বিন' in Bengali)
    - day_of_week_sanskrit (e.g., 'ಭೌಮವಾರ' in Kannada, 'ভৌমবার' in Bengali, 'भौमवार' in Hindi)
    - moon_sign_today (e.g., 'ಮಕರ' in Kannada, 'মকর' in Bengali, 'मकर' in Hindi)
 3. Tone must be uplifting, respectful, and astrologically precise.
@@ -394,13 +410,12 @@ def save_dataset_file(output_dir: Path, code: str, dataset: dict):
         try:
             asset_file.parent.mkdir(parents=True, exist_ok=True)
             asset_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
-            print(f"     [✓] Synchronized Android asset: {asset_file}")
+            print(f"     [OK] Synchronized Android asset: {asset_file}")
         except Exception as e:
             print(f"     [!] Notice: Could not sync Android asset ({e})")
 
-def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
+def load_existing_datasets(output_dir: Path) -> dict:
     datasets = {}
-    cutoff_date = (today - timedelta(days=1)).strftime("%Y-%m-%d")
 
     for code, name in LANGUAGES.items():
         file_path = output_dir / f"panchang-rashifal-week-{code}.json"
@@ -414,11 +429,6 @@ def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
                 raw_text = file_path.read_text(encoding="utf-8").strip()
                 if raw_text:
                     data = json.loads(raw_text)
-                    valid_days = {
-                        d: v for d, v in data.get("days", {}).items()
-                        if d >= cutoff_date
-                    }
-                    data["days"] = valid_days
                     datasets[code] = data
                     continue
             except Exception as e:
@@ -439,81 +449,65 @@ def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
     return datasets
 
 # ---------------------------------------------------------
-# 5. Main Pipeline
+# 5. Main Pipeline for TODAY ONLY
 # ---------------------------------------------------------
 def main():
     ist = ZoneInfo("Asia/Kolkata")
     today = datetime.now(ist).date()
-    tomorrow = today + timedelta(days=1)
+    date_str = today.strftime("%Y-%m-%d")
 
     print(f"============================================================")
-    print(f" Resumable Daily Panchang & Rashifal Generator (Gemini Flash)")
-    print(f" Current Date (IST): {today.isoformat()} | Advance Target: {tomorrow.isoformat()}")
-    print(f" Languages: {', '.join(LANGUAGES.values())} (8 total)")
-    print(f" Full Regional Script Localization: Active for Panchang & Rashifal")
+    print(f" One-Time Panchang & Rashifal Generator (TODAY ONLY)")
+    print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})")
+    print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)")
+    print(f" Free-Tier Safe: Exactly 8 calls (Leaves 12-call buffer under 20 RPD cap)")
     print(f"============================================================\n")
 
     output_dir = Path("data")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    datasets = load_existing_datasets(output_dir, today)
+    datasets = load_existing_datasets(output_dir)
 
-    # Resumption Detection:
-    target_dates = []
-    for d in [today, tomorrow]:
-        date_str = d.strftime("%Y-%m-%d")
-        is_fully_covered = all(date_str in datasets[code]["days"] for code in LANGUAGES.keys())
-        if not is_fully_covered:
-            target_dates.append(d)
-
-    if not target_dates:
-        print(f" [✓] Both Today ({today}) and Tomorrow ({tomorrow}) are 100% complete across all 8 languages.")
-        day_plus_2 = today + timedelta(days=2)
-        date_str_plus_2 = day_plus_2.strftime("%Y-%m-%d")
-        if not all(date_str_plus_2 in datasets[code]["days"] for code in LANGUAGES.keys()):
-            target_dates.append(day_plus_2)
-
-    target_dates = target_dates[:2]
-
-    if not target_dates:
-        print(" [✓] Everything is already up to date. No API calls required.")
+    # Check if TODAY is already 100% complete across all 8 languages
+    is_fully_covered = all(date_str in datasets[code]["days"] for code in LANGUAGES.keys())
+    if is_fully_covered:
+        print(f" [OK] Today ({date_str}) is already 100% complete across all 8 languages.")
+        for code in LANGUAGES.keys():
+            save_dataset_file(output_dir, code, datasets[code])
+        print(" [OK] Datasets verified. 0 API calls required.")
         return
 
-    print(f"Dates to process this run ({len(target_dates)} day(s)): {[d.isoformat() for d in target_dates]}")
+    print(f"Generating Today: {date_str} ({today.strftime('%A')})")
     indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
 
-    for target_date in target_dates:
-        date_str = target_date.strftime("%Y-%m-%d")
-        print(f"\n>>> Processing Date: {date_str} ({target_date.strftime('%A')})")
+    # 1. Base English Generation (Skip if already present)
+    if date_str not in datasets["en"]["days"]:
+        print(f" [+] Generating Base English for today {date_str}...")
+        english_day = generate_base_day(today)
+        datasets["en"]["days"][date_str] = english_day
+        save_dataset_file(output_dir, "en", datasets["en"])
+        print(f"     [OK] English saved to disk.")
+        time.sleep(REQUEST_SPACING_SECONDS)
+    else:
+        print(f"     [OK] English already present on disk for {date_str} (0 API calls).")
+        english_day = datasets["en"]["days"][date_str]
 
-        # 1. Base English Generation (Skip if already on disk)
-        if date_str not in datasets["en"]["days"]:
-            print(f" [+] Generating Base English for {date_str}...")
-            english_day = generate_base_day(target_date)
-            datasets["en"]["days"][date_str] = english_day
-            save_dataset_file(output_dir, "en", datasets["en"])
-            print(f"     [✓] English saved to disk.")
-            time.sleep(REQUEST_SPACING_SECONDS)
-        else:
-            print(f"     [✓] English already present on disk for {date_str} (0 API calls).")
-            english_day = datasets["en"]["days"][date_str]
+    # 2. Translate into 7 Indic Languages (Skip any language already on disk)
+    for code, name in indic_langs.items():
+        if date_str in datasets[code]["days"]:
+            print(f"     [OK] {name} ({code}) already present on disk (0 API calls).")
+            continue
 
-        # 2. Translate into 7 Indic Languages (Skip any language already on disk)
-        for code, name in indic_langs.items():
-            if date_str in datasets[code]["days"]:
-                print(f"     [✓] {name} ({code}) already present on disk (0 API calls).")
-                continue
-
-            print(f" -> Localizing {date_str} to {name} ({code})...")
-            localized_day = translate_day(english_day, lang_code=code, lang_name=name)
-            datasets[code]["days"][date_str] = localized_day
-            
-            save_dataset_file(output_dir, code, datasets[code])
-            print(f"     [✓] {name} saved to disk.")
-            time.sleep(REQUEST_SPACING_SECONDS)
+        print(f" -> Localizing {date_str} to {name} ({code})...")
+        localized_day = translate_day(english_day, lang_code=code, lang_name=name)
+        datasets[code]["days"][date_str] = localized_day
+        
+        save_dataset_file(output_dir, code, datasets[code])
+        print(f"     [OK] {name} saved to disk.")
+        time.sleep(REQUEST_SPACING_SECONDS)
 
     print("\n============================================================")
-    print(" Complete! All datasets are 100% updated and saved to disk.")
+    print(f" Success! Today ({date_str}) is 100% generated across all 8 languages.")
     print("============================================================")
 
 if __name__ == "__main__":
