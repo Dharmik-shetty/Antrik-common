@@ -31,11 +31,11 @@ if hasattr(sys.stdout, "reconfigure"):
 # ---------------------------------------------------------
 # 1. Configuration & Client Setup
 # ---------------------------------------------------------
-google_api_key = os.environ.get("GEMINI_API_KEY")
-groq_api_key = os.environ.get("GROQ_API_KEY")
+google_api_key = (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or "").strip()
+groq_api_key = (os.environ.get("GROQ_API_KEY") or "").strip()
 
 if not google_api_key:
-    print("Error: GOOGLE_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
+    print("Error: GEMINI_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
     sys.exit(1)
 
 if not groq_api_key:
