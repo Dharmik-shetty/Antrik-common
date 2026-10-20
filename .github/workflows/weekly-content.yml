@@ -25,11 +25,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install google-genai
+          pip install groq
 
       - name: Generate Daily Panchang & Rashifal (with auto-resume retry)
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           for attempt in 1 2 3; do
             echo "============================================================"
@@ -40,8 +40,8 @@ jobs:
               break
             fi
             if [ "$attempt" -lt 3 ]; then
-              echo "Script paused. Waiting 90s for Google server demand spike to clear before resuming from where it left off..."
-              sleep 90
+              echo "Script paused. Waiting 30s before resuming from where it left off..."
+              sleep 30
             else
               echo "Exhausted all 3 attempts."
               exit 1
@@ -49,6 +49,7 @@ jobs:
           done
 
       - name: Commit and push updated JSON
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
