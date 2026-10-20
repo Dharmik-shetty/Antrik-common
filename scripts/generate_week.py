@@ -1,10 +1,18 @@
 """
-generate_today.py
+generate_week.py
 Hybrid Architecture:
 - Base Jyotish Generation (Panchanga & 12-Rashi Bhavisya): Google Gemini 3.8 Flash exclusively
 - Regional Translation & Indic Script Localization: Groq GPT-OSS 120B (with GPT-OSS 20B & Gemini 3.8 Flash fallbacks)
 - Resilient Demand Management: Progressive backoff, jitter, and multi-attempt retries for rate limits and server demand spikes.
-Translates all technical Panchang terms directly into native Indic scripts.
+
+Policy:
+- Rolling Forecast: Guarantees coverage for Today and Tomorrow across all 8 languages.
+- Intelligent Resumption: Skips any day/language already present on disk (0 wasted API calls).
+- Auto-Purge: Removes data older than today (keeps today and future forecasts).
+- True State Persistence: Saves each language immediately upon completion with zero lost work.
+- Native Regional Script: Translates all Panchanga terms (Tithi, Nakshatra, Yoga, Karana, Rashi, Sanskrit Day)
+  directly into native Indic script.
+- Fault Tolerant: Automatic multi-provider fallback, key alias normalization, and safe defaults guarantee 0 crashes.
 """
 
 import copy
@@ -13,7 +21,7 @@ import os
 import random
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -21,7 +29,7 @@ from google import genai
 from google.genai import types
 from groq import Groq
 
-# Real-time stdout buffering so GitHub Actions displays progress live
+# Ensure UTF-8 output across all operating systems
 if hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
@@ -615,6 +623,9 @@ Output Schema:
 
     return localized_day
 
+# ---------------------------------------------------------
+# 4. Storage & Incremental Saving
+# ---------------------------------------------------------
 def save_dataset_file(output_dir: Path, code: str, dataset: dict):
     ist = ZoneInfo("Asia/Kolkata")
     dataset["metadata"]["generated_at"] = datetime.now(ist).isoformat()
@@ -646,8 +657,10 @@ def save_dataset_file(output_dir: Path, code: str, dataset: dict):
         except Exception as e:
             print(f"     [!] Notice writing Android master asset: {e}", flush=True)
 
-def load_existing_datasets(output_dir: Path) -> dict:
+def load_existing_datasets(output_dir: Path, today: datetime.date) -> dict:
     datasets = {}
+    cutoff_date = today.strftime("%Y-%m-%d")
+
     for code, name in LANGUAGES.items():
         file_path = output_dir / f"panchang-rashifal-week-{code}.json"
         if code == "en" and not file_path.exists():
@@ -659,60 +672,59 @@ def load_existing_datasets(output_dir: Path) -> dict:
             try:
                 raw_text = file_path.read_text(encoding="utf-8").strip()
                 if raw_text:
-                    datasets[code] = json.loads(raw_text)
-                    if "days" not in datasets[code] or not isinstance(datasets[code]["days"], dict):
-                        datasets[code]["days"] = {}
+                    data = json.loads(raw_text)
+                    valid_days = {
+                        d: v for d, v in data.get("days", {}).items()
+                        if d >= cutoff_date
+                    }
+                    data["days"] = valid_days
+                    datasets[code] = data
                     continue
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Notice: Initializing fresh state for {file_path.name} ({e})", flush=True)
 
         datasets[code] = {
             "metadata": {
-                "generated_at": None,
+                "generated_at": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(),
                 "language_code": code,
                 "language_name": name,
                 "timezone": "Asia/Kolkata",
                 "reference_standard": "New Delhi / Central India (IST)",
-                "ayanamsha": "Lahiri / Chitrapaksha",
-                "coverage": {"start_date": None, "end_date": None}
+                "ayanamsha": "Lahiri / Chitrapaksha"
             },
             "days": {}
         }
 
     return datasets
 
-def main():
-    ist = ZoneInfo("Asia/Kolkata")
-    today = datetime.now(ist).date()
-    date_str = today.strftime("%Y-%m-%d")
+def process_target_date(target_date: datetime.date, datasets: dict, output_dir: Path):
+    date_str = target_date.strftime("%Y-%m-%d")
+    is_fully_covered = all(date_str in datasets[code]["days"] for code in LANGUAGES.keys())
+    if is_fully_covered:
+        print(f" [OK] Date {date_str} is already 100% complete across all 8 languages.", flush=True)
+        return
 
-    print(f"============================================================", flush=True)
-    print(f" Hybrid Jyotish Generator (Gemini 3.8 Flash + Groq GPT-OSS)", flush=True)
-    print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})", flush=True)
-    print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)", flush=True)
-    print(f" Base Astrologer: Google Gemini ({GEMINI_MODEL} exclusively)", flush=True)
-    print(f" Translator: Groq ({' -> '.join(GROQ_MODELS)})", flush=True)
-    print(f" Demand Tolerance: Enabled (dynamic backoff, jitter, retry budget)", flush=True)
-    print(f"============================================================\n", flush=True)
-
-    output_dir = Path("data")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    datasets = load_existing_datasets(output_dir)
-
-    print(f"Generating Today: {date_str} ({today.strftime('%A')})", flush=True)
+    print(f"\n---> Processing Target Date: {date_str} ({target_date.strftime('%A')})", flush=True)
     indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
 
-    # 1. Base English Generation (Gemini 3.8 Flash)
-    print(f" [+] Generating Base English with Gemini 3.8 Flash for {date_str}...", flush=True)
-    english_day = generate_base_day(today)
-    datasets["en"]["days"][date_str] = english_day
-    save_dataset_file(output_dir, "en", datasets["en"])
-    print(f"     [OK] English saved to disk.", flush=True)
-    time.sleep(REQUEST_SPACING_SECONDS)
+    # 1. Base English Generation (Gemini 3.8 Flash exclusively)
+    if date_str not in datasets["en"]["days"]:
+        print(f" [+] Generating Base English with Gemini 3.8 Flash for {date_str}...", flush=True)
+        english_day = generate_base_day(target_date)
+        datasets["en"]["days"][date_str] = english_day
+        save_dataset_file(output_dir, "en", datasets["en"])
+        print(f"     [OK] English saved to disk.", flush=True)
+        time.sleep(REQUEST_SPACING_SECONDS)
+    else:
+        print(f"     [OK] English already present on disk for {date_str} (0 API calls).", flush=True)
+        english_day = datasets["en"]["days"][date_str]
 
-    # 2. Translate into 7 Indic Languages (Groq GPT-OSS 120B)
+    # 2. Localize into 7 Indic Languages (Groq GPT-OSS 120B)
     for code, name in indic_langs.items():
+        if date_str in datasets[code]["days"]:
+            print(f"     [OK] {name} ({code}) already present on disk (0 API calls).", flush=True)
+            continue
+
         print(f" -> Localizing {date_str} to {name} ({code}) with Groq...", flush=True)
         localized_day = translate_day(english_day, lang_code=code, lang_name=name)
         datasets[code]["days"][date_str] = localized_day
@@ -721,8 +733,41 @@ def main():
         print(f"     [OK] {name} saved to disk.", flush=True)
         time.sleep(REQUEST_SPACING_SECONDS)
 
+# ---------------------------------------------------------
+# 5. Main Pipeline (Ensures Today + Tomorrow are covered)
+# ---------------------------------------------------------
+def main():
+    ist = ZoneInfo("Asia/Kolkata")
+    today = datetime.now(ist).date()
+    tomorrow = today + timedelta(days=1)
+
+    print(f"============================================================", flush=True)
+    print(f" Daily Panchang & Rashifal Generator (Gemini + Groq)", flush=True)
+    print(f" Current Date (IST): {today.isoformat()} | Target Next Day: {tomorrow.isoformat()}", flush=True)
+    print(f" Languages: {', '.join(LANGUAGES.values())} (8 total)", flush=True)
+    print(f" Base Astrologer: Google Gemini ({GEMINI_MODEL} exclusively)", flush=True)
+    print(f" Translator: Groq ({' -> '.join(GROQ_MODELS)})", flush=True)
+    print(f" Demand Tolerance: Enabled (dynamic backoff, jitter, retry budget)", flush=True)
+    print(f" Policy: Guarantees Today + Tomorrow & purges data older than Today", flush=True)
+    print(f"============================================================\n", flush=True)
+
+    output_dir = Path("data")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    datasets = load_existing_datasets(output_dir, today)
+
+    # 1. Guarantee Today is complete (vital for initial setup or catch-up)
+    process_target_date(today, datasets, output_dir)
+
+    # 2. Guarantee Tomorrow is complete (regular rolling daily forecast)
+    process_target_date(tomorrow, datasets, output_dir)
+
+    # Final save of metadata / purge state for all datasets
+    for code in LANGUAGES.keys():
+        save_dataset_file(output_dir, code, datasets[code])
+
     print("\n============================================================", flush=True)
-    print(f" Success! Today ({date_str}) is 100% generated across all 8 languages.", flush=True)
+    print(f" Complete! Panchang & Rashifal datasets are 100% updated and saved.", flush=True)
     print("============================================================", flush=True)
 
 if __name__ == "__main__":
