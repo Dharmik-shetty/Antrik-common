@@ -30,12 +30,13 @@ jobs:
       - name: Generate Daily Panchang & Rashifal (with auto-resume retry)
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PYTHONUNBUFFERED: "1"
         run: |
           for attempt in 1 2 3; do
             echo "============================================================"
             echo " Execution Attempt $attempt of 3"
             echo "============================================================"
-            if python scripts/generate_week.py; then
+            if python -u scripts/generate_week.py; then
               echo "Generation fully complete!"
               break
             fi
@@ -54,8 +55,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A data/
-          if [ -f "app/src/main/assets/panchang-rashifal-week.json" ]; then
-            git add app/src/main/assets/panchang-rashifal-week.json
+          if [ -d "app/src/main/assets" ]; then
+            git add app/src/main/assets/panchang-rashifal-week*.json
           fi
           git diff --cached --quiet || (
             git commit -m "chore(astrology): update rolling panchang and rashifal [skip ci]"
