@@ -1,6 +1,6 @@
 """
 generate_today.py
-Forces fresh generation of TODAY across all 8 languages using Groq (GPT-OSS / Llama 3.3).
+Forces fresh generation of TODAY across all 8 languages using Groq.
 Translates all technical Panchang terms directly into native Indic scripts.
 Guarantees 100% complete coverage for all 12 Rashis with robust fallback and key normalization.
 """
@@ -32,12 +32,21 @@ if not api_key:
 
 client = Groq(api_key=api_key)
 
-# Flagship high-intelligence models with proven high-throughput fallbacks
-MODELS_TO_TRY = [
+# Models tailored for task types:
+# Base astrology generation benefits from deep reasoning (GPT-OSS 120B / 20B)
+BASE_MODELS = [
     "openai/gpt-oss-120b",
     "openai/gpt-oss-20b",
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant"
+]
+
+# Translation requires high linguistic throughput without wasting token budget on reasoning
+TRANSLATION_MODELS = [
+    "llama-3.3-70b-versatile",
+    "openai/gpt-oss-120b",
+    "llama-3.1-8b-instant",
+    "openai/gpt-oss-20b"
 ]
 
 LANGUAGES = {
@@ -107,9 +116,12 @@ def clean_json_response(raw_text: str) -> dict:
 # ---------------------------------------------------------
 # 2. API Invocation with Multi-Model Fallback
 # ---------------------------------------------------------
-def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
+def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3, models_list: list = None) -> dict:
+    if models_list is None:
+        models_list = BASE_MODELS
+
     last_error = None
-    for model_name in MODELS_TO_TRY:
+    for model_name in models_list:
         for attempt in range(max_retries):
             try:
                 call_kwargs = {
@@ -120,24 +132,31 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                     ],
                     "response_format": {"type": "json_object"},
                     "temperature": 0.2,
-                    "max_completion_tokens": 4096
+                    "max_completion_tokens": 8192
                 }
 
                 # Reasoning models on Groq (gpt-oss, qwen, deepseek) must use hidden reasoning format with json_object
                 if "gpt-oss" in model_name or "qwen" in model_name or "deepseek" in model_name:
                     call_kwargs["reasoning_format"] = "hidden"
+                    call_kwargs["reasoning_effort"] = "low"
 
                 try:
                     response = client.chat.completions.create(**call_kwargs)
                 except Exception as inner_e:
                     err_str = str(inner_e).lower()
-                    # If endpoint rejects reasoning_format, retry without it
+                    retry_needed = False
+                    if "reasoning_effort" in err_str and "reasoning_effort" in call_kwargs:
+                        del call_kwargs["reasoning_effort"]
+                        retry_needed = True
                     if "reasoning_format" in err_str and "reasoning_format" in call_kwargs:
                         del call_kwargs["reasoning_format"]
-                        response = client.chat.completions.create(**call_kwargs)
-                    elif "max_completion_tokens" in err_str and "max_completion_tokens" in call_kwargs:
+                        retry_needed = True
+                    if "max_completion_tokens" in err_str and "max_completion_tokens" in call_kwargs:
                         del call_kwargs["max_completion_tokens"]
-                        call_kwargs["max_tokens"] = 4096
+                        call_kwargs["max_tokens"] = 8192
+                        retry_needed = True
+
+                    if retry_needed:
                         response = client.chat.completions.create(**call_kwargs)
                     else:
                         raise inner_e
@@ -150,7 +169,7 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
 
             except Exception as e:
                 last_error = e
-                err_msg = str(e)
+                err_msg = str(e).lower()
 
                 if "rate_limit_exceeded" in err_msg or "429" in err_msg:
                     print(f"   [!] Rate limit on {model_name}. Waiting 20s...", flush=True)
@@ -159,6 +178,10 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
 
                 if "model_not_found" in err_msg or "404" in err_msg:
                     print(f"   [!] Model {model_name} not available. Trying fallback...", flush=True)
+                    break
+
+                if "max completion tokens reached" in err_msg or "max_completion_tokens" in err_msg:
+                    print(f"   [!] Token limit exhausted on {model_name}. Switching immediately to fallback model...", flush=True)
                     break
 
                 if "json_validate_failed" in err_msg or "400" in err_msg:
@@ -362,7 +385,12 @@ CRITICAL: Return ONLY valid JSON matching this schema. Do NOT include markdown c
   }}
 }}
 """
-    raw_day = call_groq_with_retry(system_prompt, user_prompt, task_name=f"Base Gen {date_str}")
+    raw_day = call_groq_with_retry(
+        system_prompt,
+        user_prompt,
+        task_name=f"Base Gen {date_str}",
+        models_list=BASE_MODELS
+    )
     return normalize_base_day(raw_day, target_date)
 
 def translate_day(day_data: dict, lang_code: str, lang_name: str) -> dict:
@@ -455,7 +483,8 @@ Output Schema:
     translated_fields = call_groq_with_retry(
         system_prompt,
         user_prompt,
-        task_name=f"Translate {date_str} to {lang_name}"
+        task_name=f"Translate {date_str} to {lang_name}",
+        models_list=TRANSLATION_MODELS
     )
 
     localized_day = copy.deepcopy(day_data)
@@ -556,13 +585,21 @@ def save_dataset_file(output_dir: Path, code: str, dataset: dict):
 def load_existing_datasets(output_dir: Path) -> dict:
     datasets = {}
     for code, name in LANGUAGES.items():
-        lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
-        if lang_file.exists():
+        file_path = output_dir / f"panchang-rashifal-week-{code}.json"
+        if lang_file := file_path:
+            if code == "en" and not file_path.exists():
+                alt_path = output_dir / "panchang-rashifal-week.json"
+                if alt_path.exists():
+                    file_path = alt_path
+
+        if file_path.exists():
             try:
-                datasets[code] = json.loads(lang_file.read_text(encoding="utf-8"))
-                if "days" not in datasets[code] or not isinstance(datasets[code]["days"], dict):
-                    datasets[code]["days"] = {}
-                continue
+                raw_text = file_path.read_text(encoding="utf-8").strip()
+                if raw_text:
+                    datasets[code] = json.loads(raw_text)
+                    if "days" not in datasets[code] or not isinstance(datasets[code]["days"], dict):
+                        datasets[code]["days"] = {}
+                    continue
             except Exception:
                 pass
 
@@ -590,7 +627,8 @@ def main():
     print(f" One-Time Panchang & Rashifal Generator (Groq LPU)", flush=True)
     print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})", flush=True)
     print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)", flush=True)
-    print(f" Active Models: {' -> '.join(MODELS_TO_TRY)}", flush=True)
+    print(f" Base Models: {' -> '.join(BASE_MODELS)}", flush=True)
+    print(f" Translation Models: {' -> '.join(TRANSLATION_MODELS)}", flush=True)
     print(f"============================================================\n", flush=True)
 
     output_dir = Path("data")
