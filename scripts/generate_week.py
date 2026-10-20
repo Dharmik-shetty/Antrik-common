@@ -31,15 +31,31 @@ if hasattr(sys.stdout, "reconfigure"):
 # ---------------------------------------------------------
 # 1. Configuration & Client Setup
 # ---------------------------------------------------------
-google_api_key = (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or "").strip()
-groq_api_key = (os.environ.get("GROQ_API_KEY") or "").strip()
+def find_gemini_key() -> str:
+    for k, v in os.environ.items():
+        if k.upper() in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "GEMINI_KEY", "GOOGLE_KEY") and v.strip():
+            return v.strip()
+    return ""
+
+def find_groq_key() -> str:
+    for k, v in os.environ.items():
+        if k.upper() in ("GROQ_API_KEY", "GROQ_KEY") and v.strip():
+            return v.strip()
+    return ""
+
+google_api_key = find_gemini_key()
+groq_api_key = find_groq_key()
 
 if not google_api_key:
-    print("Error: GEMINI_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
+    matched = [k for k in os.environ.keys() if any(w in k.upper() for w in ["GEMINI", "GOOGLE", "GROQ", "API", "KEY"])]
+    print("Error: GEMINI_API_KEY environment variable is missing in runner.", file=sys.stderr, flush=True)
+    print(f"Debug: Discovered matching env variables: {matched}", file=sys.stderr, flush=True)
+    print("Please verify that .github/workflows/weekly-content.yml includes:", file=sys.stderr, flush=True)
+    print("  env:\n    GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}", file=sys.stderr, flush=True)
     sys.exit(1)
 
 if not groq_api_key:
-    print("Error: GROQ_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
+    print("Error: GROQ_API_KEY environment variable is missing in runner.", file=sys.stderr, flush=True)
     sys.exit(1)
 
 gemini_client = genai.Client(api_key=google_api_key)
