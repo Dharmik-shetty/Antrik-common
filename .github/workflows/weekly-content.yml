@@ -52,7 +52,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/ app/src/main/assets/panchang-rashifal-week.json
+          git add -A data/
+          if [ -f "app/src/main/assets/panchang-rashifal-week.json" ]; then
+            git add app/src/main/assets/panchang-rashifal-week.json
+          fi
           git diff --cached --quiet || (
             git commit -m "chore(astrology): update rolling panchang and rashifal [skip ci]"
             git push
