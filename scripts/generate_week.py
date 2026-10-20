@@ -1,14 +1,16 @@
 """
 generate_today.py
 Hybrid Architecture:
-- Base Jyotish Generation (Panchanga & 12-Rashi Bhavisya): Google Gemini 3.8 Flash
-- Regional Translation & Indic Script Localization: Groq GPT-OSS 120B (with GPT-OSS 20B & Gemini fallbacks)
+- Base Jyotish Generation (Panchanga & 12-Rashi Bhavisya): Google Gemini 3.8 Flash exclusively
+- Regional Translation & Indic Script Localization: Groq GPT-OSS 120B (with GPT-OSS 20B & Gemini 3.8 Flash fallbacks)
+- Resilient Demand Management: Progressive backoff, jitter, and multi-attempt retries for rate limits and server demand spikes.
 Translates all technical Panchang terms directly into native Indic scripts.
 """
 
 import copy
 import json
 import os
+import random
 import sys
 import time
 from datetime import datetime
@@ -43,15 +45,10 @@ if not groq_api_key:
 gemini_client = genai.Client(api_key=google_api_key)
 groq_client = Groq(api_key=groq_api_key)
 
-# Models for Base Generation (Google Gemini)
-GEMINI_MODELS = [
-    "gemini-3.8-flash",
-    "gemini-2.5-flash",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash"
-]
+# Strictly Gemini 3.8 Flash only (no fallback to 2.5 or 2.0)
+GEMINI_MODEL = "gemini-3.8-flash"
 
-# Models for Translation (Groq GPT-OSS)
+# Translation models on Groq
 GROQ_MODELS = [
     "openai/gpt-oss-120b",
     "openai/gpt-oss-20b"
@@ -89,7 +86,7 @@ RASHI_ALIASES = {
     "meena": "Meena", "meen": "Meena", "pisces": "Meena"
 }
 
-REQUEST_SPACING_SECONDS = 2.0
+REQUEST_SPACING_SECONDS = 2.5
 
 def get_default_rashi(rashi_name: str) -> dict:
     return {
@@ -121,52 +118,74 @@ def clean_json_response(raw_text: str) -> dict:
     return json.loads(cleaned)
 
 # ---------------------------------------------------------
-# 2. Google Gemini Invocation (Base Jyotish Generation)
+# 2. Google Gemini 3.8 Flash (High-Demand Tolerant Invocation)
 # ---------------------------------------------------------
-def call_gemini_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
+def call_gemini_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 6) -> dict:
+    """
+    Strictly invokes Gemini 3.8 Flash with progressive backoff and jitter
+    to handle demand spikes (503/500/overload) and rate limits (429).
+    """
     last_error = None
-    for model_name in GEMINI_MODELS:
-        for attempt in range(max_retries):
-            try:
-                response = gemini_client.models.generate_content(
-                    model=model_name,
-                    contents=user_prompt,
-                    config=types.GenerateContentConfig(
-                        system_instruction=system_prompt,
-                        response_mime_type="application/json",
-                        temperature=0.2,
-                    )
+    for attempt in range(1, max_retries + 1):
+        try:
+            response = gemini_client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=user_prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                    response_mime_type="application/json",
+                    temperature=0.2,
                 )
-                raw_text = response.text
-                if not raw_text:
-                    raise ValueError(f"Empty response from Gemini {model_name}")
-                return clean_json_response(raw_text)
+            )
+            raw_text = response.text
+            if not raw_text:
+                raise ValueError("Empty response text received from Gemini 3.8 Flash")
+            return clean_json_response(raw_text)
 
-            except Exception as e:
-                last_error = e
-                err_msg = str(e).lower()
-                if "429" in err_msg or "resource_exhausted" in err_msg:
-                    print(f"   [!] Rate limit on Gemini {model_name}. Waiting 15s...", flush=True)
-                    time.sleep(15)
-                    continue
-                if "404" in err_msg or "not_found" in err_msg or "not found" in err_msg:
-                    print(f"   [!] Gemini model {model_name} not available. Trying fallback...", flush=True)
-                    break
+        except Exception as e:
+            last_error = e
+            err_msg = str(e).lower()
+            code = getattr(e, "code", None)
 
-                delay = 3 * (attempt + 1)
-                print(f"   [!] {task_name} (Gemini {model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}", flush=True)
-                if attempt < max_retries - 1:
+            is_rate_limit = "429" in err_msg or "resource_exhausted" in err_msg or code == 429
+            is_overloaded = (
+                "503" in err_msg
+                or "overloaded" in err_msg
+                or "high demand" in err_msg
+                or "unavailable" in err_msg
+                or "500" in err_msg
+                or "internal" in err_msg
+                or code in (500, 503, 504)
+            )
+
+            if attempt < max_retries:
+                if is_rate_limit:
+                    delay = 15.0 + (attempt * 8.0) + random.uniform(1.0, 3.0)
+                    print(f"   [!] Gemini 3.8 Flash rate limit / quota hit (attempt {attempt}/{max_retries}).", flush=True)
+                    print(f"       Cooling down for {delay:.1f}s before retrying {task_name}...", flush=True)
                     time.sleep(delay)
+                elif is_overloaded:
+                    delay = 10.0 + (attempt * 6.0) + random.uniform(1.0, 3.0)
+                    print(f"   [!] Gemini 3.8 Flash high demand / server overload (attempt {attempt}/{max_retries}).", flush=True)
+                    print(f"       Backing off for {delay:.1f}s before retrying {task_name}...", flush=True)
+                    time.sleep(delay)
+                else:
+                    delay = 5.0 * attempt + random.uniform(1.0, 2.0)
+                    print(f"   [!] {task_name} (Gemini 3.8 Flash) attempt {attempt}/{max_retries} encountered: {e}", flush=True)
+                    print(f"       Retrying in {delay:.1f}s...", flush=True)
+                    time.sleep(delay)
+            else:
+                print(f"   [!] All {max_retries} attempts exhausted for {task_name} on Gemini 3.8 Flash.", flush=True)
 
-    raise RuntimeError(f"All Gemini models exhausted for {task_name}. Last error: {last_error}")
+    raise RuntimeError(f"Gemini 3.8 Flash failed for {task_name} after {max_retries} attempts. Last error: {last_error}")
 
 # ---------------------------------------------------------
-# 3. Groq Invocation (Translation with Gemini Fallback)
+# 3. Groq Invocation (Translation with Gemini 3.8 Flash Fallback)
 # ---------------------------------------------------------
 def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
     last_error = None
     for model_name in GROQ_MODELS:
-        for attempt in range(max_retries):
+        for attempt in range(1, max_retries + 1):
             try:
                 call_kwargs = {
                     "model": model_name,
@@ -214,8 +233,9 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                 err_msg = str(e).lower()
 
                 if "rate_limit_exceeded" in err_msg or "429" in err_msg:
-                    print(f"   [!] Rate limit on Groq {model_name}. Waiting 20s...", flush=True)
-                    time.sleep(20)
+                    delay = 15.0 + (attempt * 8.0) + random.uniform(1.0, 3.0)
+                    print(f"   [!] Rate limit on Groq {model_name}. Waiting {delay:.1f}s (attempt {attempt}/{max_retries})...", flush=True)
+                    time.sleep(delay)
                     continue
 
                 if "model_not_found" in err_msg or "404" in err_msg:
@@ -223,17 +243,17 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                     break
 
                 if "max completion tokens reached" in err_msg or "max_completion_tokens" in err_msg:
-                    print(f"   [!] Token limit exhausted on Groq {model_name}. Trying fallback...", flush=True)
+                    print(f"   [!] Token limit exhausted on Groq {model_name}. Trying fallback model...", flush=True)
                     break
 
-                delay = 4 * (attempt + 1)
-                print(f"   [!] {task_name} (Groq {model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}", flush=True)
-                if attempt < max_retries - 1:
+                delay = 4.0 * attempt + random.uniform(1.0, 2.0)
+                print(f"   [!] {task_name} (Groq {model_name}) attempt {attempt}/{max_retries} encountered: {e}", flush=True)
+                if attempt < max_retries:
                     time.sleep(delay)
 
-    # Seamless safety fallback: If Groq models fail, use Google Gemini for translation
-    print(f"   [!] Groq models unavailable for {task_name}. Falling back to Google Gemini...", flush=True)
-    return call_gemini_with_retry(system_prompt, user_prompt, task_name=f"{task_name} (Gemini fallback)")
+    # Seamless safety fallback: If Groq models fail, translate via Gemini 3.8 Flash!
+    print(f"   [!] Groq models unavailable for {task_name}. Falling back to Gemini 3.8 Flash...", flush=True)
+    return call_gemini_with_retry(system_prompt, user_prompt, task_name=f"{task_name} (Gemini 3.8 Flash fallback)")
 
 def normalize_base_day(day_data: dict, target_date: datetime.date) -> dict:
     date_str = target_date.strftime("%Y-%m-%d")
@@ -651,11 +671,12 @@ def main():
     date_str = today.strftime("%Y-%m-%d")
 
     print(f"============================================================", flush=True)
-    print(f" Hybrid Jyotish Generator (Google Gemini + Groq LPU)", flush=True)
+    print(f" Hybrid Jyotish Generator (Gemini 3.8 Flash + Groq GPT-OSS)", flush=True)
     print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})", flush=True)
     print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)", flush=True)
-    print(f" Base Astrologer: Google Gemini ({' -> '.join(GEMINI_MODELS)})", flush=True)
+    print(f" Base Astrologer: Google Gemini ({GEMINI_MODEL} exclusively)", flush=True)
     print(f" Translator: Groq ({' -> '.join(GROQ_MODELS)})", flush=True)
+    print(f" Demand Tolerance: Enabled (dynamic backoff, jitter, retry budget)", flush=True)
     print(f"============================================================\n", flush=True)
 
     output_dir = Path("data")
@@ -666,8 +687,8 @@ def main():
     print(f"Generating Today: {date_str} ({today.strftime('%A')})", flush=True)
     indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
 
-    # 1. Base English Generation (Google Gemini 3.8 Flash)
-    print(f" [+] Generating Base English with Google Gemini for {date_str}...", flush=True)
+    # 1. Base English Generation (Gemini 3.8 Flash)
+    print(f" [+] Generating Base English with Gemini 3.8 Flash for {date_str}...", flush=True)
     english_day = generate_base_day(today)
     datasets["en"]["days"][date_str] = english_day
     save_dataset_file(output_dir, "en", datasets["en"])
