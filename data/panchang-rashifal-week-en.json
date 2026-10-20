@@ -1,1 +1,144 @@
-
+{
+  "metadata": {
+    "generated_at": "2026-10-20T20:42:29.753931+05:30",
+    "language_code": "en",
+    "language_name": "English",
+    "timezone": "Asia/Kolkata",
+    "reference_standard": "New Delhi / Central India (IST)",
+    "ayanamsha": "Lahiri / Chitrapaksha",
+    "coverage": {
+      "start_date": "2026-10-20",
+      "end_date": "2026-10-20"
+    }
+  },
+  "days": {
+    "2026-10-20": {
+      "date": "2026-10-20",
+      "day_of_week": "Tuesday",
+      "day_of_week_sanskrit": "Mangalavara",
+      "panchang": {
+        "tithi": {
+          "name": "Purnima",
+          "paksha": "Shukla",
+          "description": "The full moon day symbolizes completion, fulfillment and the culmination of efforts; it is auspicious for spiritual practices and gratitude."
+        },
+        "nakshatra": {
+          "name": "Uttara Phalguni",
+          "ruler": "Sun",
+          "pada": 2,
+          "deity": "Aryaman"
+        },
+        "yoga": {
+          "name": "Vishkambha",
+          "nature": "Benefic"
+        },
+        "karana": {
+          "name": "Shiva"
+        },
+        "calendar": {
+          "vikram_samvat": 2083,
+          "shaka_samvat": 1948,
+          "amanta_month": "Ashwin",
+          "purnimanta_month": "Kartik",
+          "ayana": "Dakshinayana",
+          "ritu": "Sharad"
+        },
+        "timings_ist": {
+          "sunrise": "06:25 AM",
+          "sunset": "05:46 PM",
+          "rahu_kaal": "07:30 AM - 09:00 AM",
+          "abhijit_muhurat": "12:00 PM - 12:48 PM",
+          "brahma_muhurta": "04:49 AM - 05:49 AM"
+        },
+        "moon_sign_today": "Simha",
+        "festival_or_vrat": "Sharad Purnima (Kojagiri Purnima)"
+      },
+      "rashifal": {
+        "Mesha": {
+          "summary": "Energy surges, making it a great day to start new initiatives.",
+          "moon_sign_position": "Simha",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "Moon in fiery Simha energises Aries, boosting confidence and optimism. Use this vigor for creative projects.",
+          "career": "Your leadership shines; take bold steps at work and propose innovative ideas.",
+          "finance": "Financial prospects look bright—consider modest investments that align with your passions.",
+          "relationships": "Passionate interactions are favoured; express your feelings openly.",
+          "health": "Physical stamina is high—engage in vigorous exercise but avoid overexertion.",
+          "lucky_number": 7,
+          "lucky_color": "Red",
+          "auspicious_time": "06:00-08:00 AM",
+          "remedy": "Light a ghee lamp and chant the Gayatri mantra after sunrise.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Vrishabha": {
+          "summary": "Steady progress marks the day, encouraging patience.",
+          "moon_sign_position": "Simha",
+          "chandra_house": 1,
+          "transit_effect": "Neutral",
+          "general": "Moon in Simha offers a calm backdrop for Taurus, supporting methodical work and practical decisions.",
+          "career": "Focus on detailed tasks; your reliability will be recognised by superiors.",
+          "finance": "Maintain a disciplined budget; small savings will accumulate over time.",
+          "relationships": "Comfort in familiar company; nurture existing bonds rather than seeking new ones.",
+          "health": "Maintain a balanced diet; avoid indulgent sweets that can upset digestion.",
+          "lucky_number": 2,
+          "lucky_color": "Green",
+          "auspicious_time": "09:00-11:00 AM",
+          "remedy": "Offer fresh flowers to a nearby deity and recite the Vishnu Sahasranama.",
+          "ratings": {
+            "career": 3,
+            "finance": 3,
+            "love": 3,
+            "health": 4
+          }
+        },
+        "Mithuna": {
+          "summary": "Communication flows smoothly, ideal for networking.",
+          "moon_sign_position": "Simha",
+          "chandra_house": 1,
+          "transit_effect": "Neutral",
+          "general": "Gemini benefits from the expressive Moon in Simha, enhancing verbal skills and social interactions.",
+          "career": "Engage in meetings and presentations; your ideas will be well received.",
+          "finance": "Opportunities for short‑term gains appear—evaluate them carefully before acting.",
+          "relationships": "Light‑hearted conversations strengthen friendships; avoid gossip.",
+          "health": "Mental agility is high; practice meditation to channel it positively.",
+          "lucky_number": 5,
+          "lucky_color": "Yellow",
+          "auspicious_time": "11:00 AM-01:00 PM",
+          "remedy": "Wear a yellow sapphire (if suitable) and chant the mantra 'Om Namo Narayanaya'.",
+          "ratings": {
+            "career": 4,
+            "finance": 3,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Karka": {
+          "summary": "Emotions run deep; practice inner balance.",
+          "moon_sign_position": "Simha",
+          "chandra_house": 1,
+          "transit_effect": "Challenging",
+          "general": "Moon opposite Cancer can stir sensitivities; stay grounded and avoid reactive decisions.",
+          "career": "Delay major commitments; focus on completing pending tasks instead.",
+          "finance": "Unexpected expenses may arise—keep a contingency fund ready.",
+          "relationships": "Tend to over‑react; practice patience and open dialogue with loved ones.",
+          "health": "Watch for digestive issues; opt for light, warm meals.",
+          "lucky_number": 9,
+          "lucky_color": "White",
+          "auspicious_time": "02:00-04:00 PM",
+          "remedy": "Perform a simple water offering (Abhisheka) to a Shiva lingam and chant 'Om Namah Shivaya'.",
+          "ratings": {
+            "career": 2,
+            "finance": 2,
+            "love": 2,
+            "health": 3
+          }
+        }
+      }
+    }
+  }
+}
