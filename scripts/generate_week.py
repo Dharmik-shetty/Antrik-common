@@ -1,18 +1,7 @@
 """
-generate_today.py
-One-time initialization script to generate authentic Indian Panchanga and
-Vedic Rashifal for TODAY across all 8 languages using OpenAI GPT-OSS on Groq Cloud.
-
-Features:
-- Primary Model: openai/gpt-oss-120b (120 Billion parameters frontier model) with
-  fallback to openai/gpt-oss-20b.
-- Targets strictly TODAY (8 API calls total: 1 English base + 7 regional translations).
-- 100% Native Script Localization: Translates all Panchang technical terms (Tithi name,
-  Paksha, Nakshatra, Ruler, Yoga, Nature, Karana, Sanskrit Day, Moon Sign, Month)
-  directly into the regional Indic scripts (Kannada, Hindi, Bengali, Tamil, Telugu, etc.).
-- True State Persistence: Saves each language to disk immediately upon completion.
-- Exact Resumption: Skips any language already present on disk (0 calls wasted).
-- Zero Demand Spikes: Powered by Groq's high-speed LPU infrastructure.
+generate_today.py (Paste into scripts/generate_week.py for initial one-time run)
+Forces fresh generation of TODAY across all 8 languages using Groq openai/gpt-oss-120b.
+Translates all technical Panchang terms directly into native Indic scripts.
 """
 
 import copy
@@ -25,10 +14,10 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from groq import Groq
 
-# Ensure UTF-8 output across all operating systems
+# Real-time stdout buffering so GitHub Actions displays progress live
 if hasattr(sys.stdout, "reconfigure"):
     try:
-        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stdout.reconfigure(encoding="utf-8", line_buffering=True)
     except Exception:
         pass
 
@@ -37,13 +26,11 @@ if hasattr(sys.stdout, "reconfigure"):
 # ---------------------------------------------------------
 api_key = os.environ.get("GROQ_API_KEY")
 if not api_key:
-    print("Error: GROQ_API_KEY environment variable is missing.", file=sys.stderr)
-    print("Please set it via: export GROQ_API_KEY='your-key' or $env:GROQ_API_KEY='your-key'", file=sys.stderr)
+    print("Error: GROQ_API_KEY environment variable is missing.", file=sys.stderr, flush=True)
     sys.exit(1)
 
 client = Groq(api_key=api_key)
 
-# Active Groq models: Flagship 120B model with fallback to high-speed 20B
 MODELS_TO_TRY = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]
 
 LANGUAGES = {
@@ -63,7 +50,7 @@ RASHIS = [
     "Dhanu", "Makara", "Kumbha", "Meena"
 ]
 
-REQUEST_SPACING_SECONDS = 3.0
+REQUEST_SPACING_SECONDS = 2.0
 
 # ---------------------------------------------------------
 # 2. API Invocation with Multi-Model Fallback
@@ -88,21 +75,19 @@ def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, m
                 last_error = e
                 err_msg = str(e)
                 if "rate_limit_exceeded" in err_msg or "429" in err_msg:
-                    print(f"   [!] Rate limit on {model_name}. Waiting 20s...")
+                    print(f"   [!] Rate limit on {model_name}. Waiting 20s...", flush=True)
                     time.sleep(20)
                     continue
 
                 if "model_not_found" in err_msg or "404" in err_msg:
-                    print(f"   [!] Model {model_name} not available. Trying fallback model...")
+                    print(f"   [!] Model {model_name} not available. Trying fallback...", flush=True)
                     break
 
-                delay = 5 * (attempt + 1)
-                print(f"   [!] {task_name} ({model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}")
+                delay = 4 * (attempt + 1)
+                print(f"   [!] {task_name} ({model_name}) attempt {attempt + 1}/{max_retries} encountered: {e}", flush=True)
                 if attempt < max_retries - 1:
-                    print(f"       Waiting {delay}s before retrying...")
+                    print(f"       Waiting {delay}s before retrying...", flush=True)
                     time.sleep(delay)
-                else:
-                    print(f"       Switching to alternative model...")
 
     raise RuntimeError(f"All models exhausted for {task_name}. Last error: {last_error}")
 
@@ -285,11 +270,9 @@ Output ONLY a JSON object with this exact structure:
 
     localized_day = copy.deepcopy(day_data)
     
-    # 1. Update Day and Moon Sign in localized script
     localized_day["day_of_week_sanskrit"] = translated_fields.get("day_of_week_sanskrit", localized_day.get("day_of_week_sanskrit", ""))
     localized_day["panchang"]["moon_sign_today"] = translated_fields.get("moon_sign_today", localized_day["panchang"].get("moon_sign_today", ""))
 
-    # 2. Update Panchang elements in localized script
     trans_p = translated_fields.get("panchang", {})
     localized_day["panchang"]["tithi"]["name"] = trans_p.get("tithi_name", localized_day["panchang"]["tithi"]["name"])
     localized_day["panchang"]["tithi"]["paksha"] = trans_p.get("tithi_paksha", localized_day["panchang"]["tithi"]["paksha"])
@@ -303,7 +286,6 @@ Output ONLY a JSON object with this exact structure:
     localized_day["panchang"]["calendar"]["purnimanta_month"] = trans_p.get("month_name", localized_day["panchang"]["calendar"]["purnimanta_month"])
     localized_day["panchang"]["festival_or_vrat"] = trans_p.get("festival_or_vrat", localized_day["panchang"]["festival_or_vrat"])
 
-    # 3. Update Rashifal text fields safely
     trans_rashifal = translated_fields.get("rashifal", {})
     for rashi in RASHIS:
         if rashi in trans_rashifal and isinstance(trans_rashifal[rashi], dict):
@@ -313,10 +295,99 @@ Output ONLY a JSON object with this exact structure:
 
     return localized_day
 
-# ---------------------------------------------------------
-# 3. Storage & Incremental Saving
-# ---------------------------------------------------------
 def save_dataset_file(output_dir: Path, code: str, dataset: dict):
-    """Saves each language immediately to disk so progress is never lost."""
     ist = ZoneInfo("Asia/Kolkata")
     dataset["metadata"]["generated_at"] = datetime.now(ist).isoformat()
+    if dataset["days"]:
+        dataset["metadata"]["coverage"] = {
+            "start_date": min(dataset["days"].keys()),
+            "end_date": max(dataset["days"].keys())
+        }
+
+    lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
+    lang_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    if code == "en":
+        master_file = output_dir / "panchang-rashifal-week.json"
+        master_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        asset_file = Path("app/src/main/assets/panchang-rashifal-week.json")
+        try:
+            asset_file.parent.mkdir(parents=True, exist_ok=True)
+            asset_file.write_text(json.dumps(dataset, ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"     [OK] Synchronized Android asset: {asset_file}", flush=True)
+        except Exception as e:
+            print(f"     [!] Warning writing Android asset: {e}", flush=True)
+
+def load_existing_datasets(output_dir: Path) -> dict:
+    datasets = {}
+    for code, name in LANGUAGES.items():
+        lang_file = output_dir / f"panchang-rashifal-week-{code}.json"
+        if lang_file.exists():
+            try:
+                datasets[code] = json.loads(lang_file.read_text(encoding="utf-8"))
+                if "days" not in datasets[code] or not isinstance(datasets[code]["days"], dict):
+                    datasets[code]["days"] = {}
+                continue
+            except Exception:
+                pass
+
+        datasets[code] = {
+            "metadata": {
+                "generated_at": None,
+                "language_code": code,
+                "language_name": name,
+                "timezone": "Asia/Kolkata",
+                "reference_standard": "New Delhi / Central India (IST)",
+                "ayanamsha": "Lahiri / Chitrapaksha",
+                "coverage": {"start_date": None, "end_date": None}
+            },
+            "days": {}
+        }
+
+    return datasets
+
+def main():
+    ist = ZoneInfo("Asia/Kolkata")
+    today = datetime.now(ist).date()
+    date_str = today.strftime("%Y-%m-%d")
+
+    print(f"============================================================", flush=True)
+    print(f" One-Time Panchang & Rashifal Generator (Groq GPT-OSS)", flush=True)
+    print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})", flush=True)
+    print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)", flush=True)
+    print(f" Active Models: {' -> '.join(MODELS_TO_TRY)}", flush=True)
+    print(f"============================================================\n", flush=True)
+
+    output_dir = Path("data")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    datasets = load_existing_datasets(output_dir)
+
+    print(f"Generating Today: {date_str} ({today.strftime('%A')})", flush=True)
+    indic_langs = {c: n for c, n in LANGUAGES.items() if c != "en"}
+
+    # 1. Base English Generation (Always fresh for Today)
+    print(f" [+] Generating Base English for today {date_str}...", flush=True)
+    english_day = generate_base_day(today)
+    datasets["en"]["days"][date_str] = english_day
+    save_dataset_file(output_dir, "en", datasets["en"])
+    print(f"     [OK] English saved to disk.", flush=True)
+    time.sleep(REQUEST_SPACING_SECONDS)
+
+    # 2. Translate into 7 Indic Languages
+    for code, name in indic_langs.items():
+        print(f" -> Localizing {date_str} to {name} ({code})...", flush=True)
+        localized_day = translate_day(english_day, lang_code=code, lang_name=name)
+        datasets[code]["days"][date_str] = localized_day
+        
+        save_dataset_file(output_dir, code, datasets[code])
+        print(f"     [OK] {name} saved to disk.", flush=True)
+        time.sleep(REQUEST_SPACING_SECONDS)
+
+    print("\n============================================================", flush=True)
+    print(f" Success! Today ({date_str}) is 100% generated across all 8 languages.", flush=True)
+    print("============================================================", flush=True)
+
+if __name__ == "__main__":
+    main()
