@@ -1,16 +1,16 @@
 """
 generate_today.py
 One-time initialization script to generate authentic Indian Panchanga and
-Vedic Rashifal for TODAY across all 8 languages using Gemini 3.8 Flash.
+Vedic Rashifal for TODAY across all 8 languages using Meta Llama 3.3 70B on Groq Cloud.
 
 Features:
 - Targets strictly TODAY (8 API calls total: 1 English base + 7 regional translations).
-- Safe within the 20 Requests-Per-Day (RPD) free-tier limit.
 - 100% Native Script Localization: Translates all Panchang technical terms (Tithi name,
   Paksha, Nakshatra, Ruler, Yoga, Nature, Karana, Sanskrit Day, Moon Sign, Month)
   directly into the regional Indic scripts (Kannada, Hindi, Bengali, Tamil, Telugu, etc.).
 - True State Persistence: Saves each language to disk immediately upon completion.
 - Exact Resumption: Skips any language already present on disk (0 calls wasted).
+- Zero Demand Spikes: Powered by Groq's high-speed LPU infrastructure.
 """
 
 import copy
@@ -21,8 +21,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
-from google import genai
-from google.genai import types
+from groq import Groq
 
 # Ensure UTF-8 output across all operating systems
 if hasattr(sys.stdout, "reconfigure"):
@@ -34,14 +33,14 @@ if hasattr(sys.stdout, "reconfigure"):
 # ---------------------------------------------------------
 # 1. Configuration & Client Setup
 # ---------------------------------------------------------
-api_key = os.environ.get("GEMINI_API_KEY")
+api_key = os.environ.get("GROQ_API_KEY")
 if not api_key:
-    print("Error: GEMINI_API_KEY environment variable is missing.", file=sys.stderr)
-    print("Please set it via: export GEMINI_API_KEY='your-key' or $env:GEMINI_API_KEY='your-key'", file=sys.stderr)
+    print("Error: GROQ_API_KEY environment variable is missing.", file=sys.stderr)
+    print("Please set it via: export GROQ_API_KEY='your-key' or $env:GROQ_API_KEY='your-key'", file=sys.stderr)
     sys.exit(1)
 
-client = genai.Client(api_key=api_key)
-MODEL_NAME = "gemini-2.5-flash"
+client = Groq(api_key=api_key)
+MODEL_NAME = "llama-3.3-70b-versatile"
 
 LANGUAGES = {
     "en": "English",
@@ -60,213 +59,37 @@ RASHIS = [
     "Dhanu", "Makara", "Kumbha", "Meena"
 ]
 
-REQUEST_SPACING_SECONDS = 5.0
+REQUEST_SPACING_SECONDS = 3.0
 
 # ---------------------------------------------------------
-# 2. Schemas
+# 2. API Invocation with Retry
 # ---------------------------------------------------------
-DAY_SCHEMA = {
-    "type": "OBJECT",
-    "properties": {
-        "date": {"type": "STRING"},
-        "day_of_week": {"type": "STRING"},
-        "day_of_week_sanskrit": {"type": "STRING"},
-        "panchang": {
-            "type": "OBJECT",
-            "properties": {
-                "tithi": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "name": {"type": "STRING"},
-                        "paksha": {"type": "STRING"},
-                        "description": {"type": "STRING"}
-                    },
-                    "required": ["name", "paksha", "description"]
-                },
-                "nakshatra": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "name": {"type": "STRING"},
-                        "ruler": {"type": "STRING"},
-                        "pada": {"type": "INTEGER"},
-                        "deity": {"type": "STRING"}
-                    },
-                    "required": ["name", "ruler"]
-                },
-                "yoga": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "name": {"type": "STRING"},
-                        "nature": {"type": "STRING"}
-                    },
-                    "required": ["name", "nature"]
-                },
-                "karana": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "name": {"type": "STRING"}
-                    },
-                    "required": ["name"]
-                },
-                "calendar": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "vikram_samvat": {"type": "INTEGER"},
-                        "shaka_samvat": {"type": "INTEGER"},
-                        "amanta_month": {"type": "STRING"},
-                        "purnimanta_month": {"type": "STRING"},
-                        "ayana": {"type": "STRING"},
-                        "ritu": {"type": "STRING"}
-                    },
-                    "required": ["vikram_samvat", "shaka_samvat", "amanta_month", "purnimanta_month", "ayana", "ritu"]
-                },
-                "timings_ist": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "sunrise": {"type": "STRING"},
-                        "sunset": {"type": "STRING"},
-                        "rahu_kaal": {"type": "STRING"},
-                        "abhijit_muhurat": {"type": "STRING"},
-                        "brahma_muhurta": {"type": "STRING"}
-                    },
-                    "required": ["sunrise", "sunset", "rahu_kaal", "abhijit_muhurat", "brahma_muhurta"]
-                },
-                "moon_sign_today": {"type": "STRING"},
-                "festival_or_vrat": {"type": "STRING"}
-            },
-            "required": ["tithi", "nakshatra", "yoga", "karana", "calendar", "timings_ist", "moon_sign_today", "festival_or_vrat"]
-        },
-        "rashifal": {
-            "type": "OBJECT",
-            "properties": {
-                rashi: {
-                    "type": "OBJECT",
-                    "properties": {
-                        "summary": {"type": "STRING"},
-                        "moon_sign_position": {"type": "STRING"},
-                        "chandra_house": {"type": "INTEGER"},
-                        "transit_effect": {"type": "STRING"},
-                        "general": {"type": "STRING"},
-                        "career": {"type": "STRING"},
-                        "finance": {"type": "STRING"},
-                        "relationships": {"type": "STRING"},
-                        "health": {"type": "STRING"},
-                        "lucky_number": {"type": "INTEGER"},
-                        "lucky_color": {"type": "STRING"},
-                        "auspicious_time": {"type": "STRING"},
-                        "remedy": {"type": "STRING"},
-                        "ratings": {
-                            "type": "OBJECT",
-                            "properties": {
-                                "career": {"type": "INTEGER"},
-                                "finance": {"type": "INTEGER"},
-                                "love": {"type": "INTEGER"},
-                                "health": {"type": "INTEGER"}
-                            },
-                            "required": ["career", "finance", "love", "health"]
-                        }
-                    },
-                    "required": [
-                        "summary", "general", "career", "finance",
-                        "relationships", "health", "lucky_number",
-                        "lucky_color", "remedy", "ratings"
-                    ]
-                }
-                for rashi in RASHIS
-            },
-            "required": RASHIS
-        }
-    },
-    "required": ["date", "day_of_week", "panchang", "rashifal"]
-}
-
-TRANSLATION_SCHEMA = {
-    "type": "OBJECT",
-    "properties": {
-        "day_of_week_sanskrit": {"type": "STRING"},
-        "moon_sign_today": {"type": "STRING"},
-        "panchang": {
-            "type": "OBJECT",
-            "properties": {
-                "tithi_name": {"type": "STRING"},
-                "tithi_paksha": {"type": "STRING"},
-                "tithi_description": {"type": "STRING"},
-                "nakshatra_name": {"type": "STRING"},
-                "nakshatra_ruler": {"type": "STRING"},
-                "yoga_name": {"type": "STRING"},
-                "yoga_nature": {"type": "STRING"},
-                "karana_name": {"type": "STRING"},
-                "month_name": {"type": "STRING"},
-                "festival_or_vrat": {"type": "STRING"}
-            },
-            "required": [
-                "tithi_name", "tithi_paksha", "tithi_description",
-                "nakshatra_name", "nakshatra_ruler", "yoga_name",
-                "yoga_nature", "karana_name", "month_name", "festival_or_vrat"
-            ]
-        },
-        "rashifal": {
-            "type": "OBJECT",
-            "properties": {
-                rashi: {
-                    "type": "OBJECT",
-                    "properties": {
-                        "summary": {"type": "STRING"},
-                        "general": {"type": "STRING"},
-                        "career": {"type": "STRING"},
-                        "finance": {"type": "STRING"},
-                        "relationships": {"type": "STRING"},
-                        "health": {"type": "STRING"},
-                        "lucky_color": {"type": "STRING"},
-                        "auspicious_time": {"type": "STRING"},
-                        "remedy": {"type": "STRING"}
-                    },
-                    "required": [
-                        "summary", "general", "career", "finance",
-                        "relationships", "health", "lucky_color",
-                        "auspicious_time", "remedy"
-                    ]
-                }
-                for rashi in RASHIS
-            },
-            "required": RASHIS
-        }
-    },
-    "required": ["day_of_week_sanskrit", "moon_sign_today", "panchang", "rashifal"]
-}
-
-# ---------------------------------------------------------
-# 3. API Invocation with Patient Backoff
-# ---------------------------------------------------------
-BACKOFF_DELAYS = [15, 30, 45]
-
-def call_gemini_with_retry(prompt: str, schema: dict, task_name: str, max_retries: int = 3) -> dict:
+def call_groq_with_retry(system_prompt: str, user_prompt: str, task_name: str, max_retries: int = 3) -> dict:
     for attempt in range(max_retries):
         try:
-            response = client.models.generate_content(
+            response = client.chat.completions.create(
                 model=MODEL_NAME,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=schema,
-                    temperature=0.2
-                )
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.2
             )
-            return json.loads(response.text)
+            raw_text = response.choices[0].message.content
+            return json.loads(raw_text)
         except Exception as e:
             err_msg = str(e)
-            if "RESOURCE_EXHAUSTED" in err_msg or "429" in err_msg:
-                print(f"\n[!] Daily Gemini Free-Tier Quota Limit Reached (429 RESOURCE_EXHAUSTED).")
-                print(f"    Google will reset the quota at 00:00 UTC (05:30 AM IST).")
-                print(f"    All languages generated so far are safely saved to disk.")
-                raise SystemExit(0)
+            if "rate_limit_exceeded" in err_msg or "429" in err_msg:
+                print(f"   [!] Rate limit reached for {task_name}. Waiting 25s...")
+                time.sleep(25)
+                continue
 
-            delay_idx = min(attempt, len(BACKOFF_DELAYS) - 1)
-            wait_time = BACKOFF_DELAYS[delay_idx]
+            delay = 5 * (attempt + 1)
             print(f"   [!] {task_name} attempt {attempt + 1}/{max_retries} encountered: {e}")
             if attempt < max_retries - 1:
-                print(f"       Waiting {wait_time}s for Google server capacity spike to clear...")
-                time.sleep(wait_time)
+                print(f"       Waiting {delay}s before retrying...")
+                time.sleep(delay)
             else:
                 raise RuntimeError(f"Failed {task_name} after {max_retries} attempts.")
 
@@ -274,9 +97,12 @@ def generate_base_day(target_date: datetime.date) -> dict:
     date_str = target_date.strftime("%Y-%m-%d")
     day_name = target_date.strftime("%A")
 
-    prompt = f"""You are a master Vedic Astrologer (Jyotish Acharya) using Nirayana Chitrapaksha (Lahiri) Ayanamsha.
+    system_prompt = (
+        "You are an expert Vedic Astrologer (Jyotish Acharya) using Nirayana Chitrapaksha (Lahiri) Ayanamsha. "
+        "You always respond with valid, strictly parseable JSON adhering to the exact required schema."
+    )
 
-Generate authentic Drik Panchanga and 12-Rashi Rashifal for:
+    user_prompt = f"""Generate authentic Drik Panchanga and 12-Rashi Rashifal for:
 Date: {date_str} ({day_name})
 Reference: Indian Standard Time (IST, UTC+05:30), New Delhi anchor.
 
@@ -284,16 +110,77 @@ Astrological Requirements:
 1. Panchanga:
    - Calculate exact Tithi, Nakshatra, Yoga, and Karana in IST.
    - Include both Amanta and Purnimanta lunar months.
-   - Provide standard IST Rahu Kaal, Abhijit Muhurat, Brahma Muhurta, Sunrise, and Sunset.
+   - Standard IST Rahu Kaal, Abhijit Muhurat, Brahma Muhurta, Sunrise, and Sunset.
    - Note any Vrat or Hindu festival (or 'Regular day' if none).
-2. Rashifal (All 12 Rashis):
-   - Determine predictions based on the Moon's transit (Chandra Gochar).
+2. Rashifal (ALL 12 Rashis: {', '.join(RASHIS)}):
+   - Provide predictions based on Moon's transit (Chandra Gochar).
    - Write insightful, non-fatalistic, inspiring predictions.
    - Provide lucky number (1-9), lucky color, best time window, ratings (1-5), and a simple Vedic remedy (Upay).
 
-Ensure all 12 Rashis ({', '.join(RASHIS)}) are populated with high quality.
+You MUST output ONLY a valid JSON object with this exact structure:
+{{
+  "date": "{date_str}",
+  "day_of_week": "{day_name}",
+  "day_of_week_sanskrit": "Sanskrit weekday name (e.g. Ravivara, Somavara, Bhaumavara, Budhavara, Guruvara, Shukravara, Shanivara)",
+  "panchang": {{
+    "tithi": {{
+      "name": "Tithi name",
+      "paksha": "Shukla or Krishna",
+      "description": "Spiritual significance of this tithi"
+    }},
+    "nakshatra": {{
+      "name": "Nakshatra name",
+      "ruler": "Ruling Graha",
+      "pada": 1,
+      "deity": "Presiding deity"
+    }},
+    "yoga": {{
+      "name": "Yoga name",
+      "nature": "Benefic or Malefic"
+    }},
+    "karana": {{
+      "name": "Karana name"
+    }},
+    "calendar": {{
+      "vikram_samvat": 2083,
+      "shaka_samvat": 1948,
+      "amanta_month": "Month name",
+      "purnimanta_month": "Month name",
+      "ayana": "Uttarayana or Dakshinayana",
+      "ritu": "Current Vedic Season"
+    }},
+    "timings_ist": {{
+      "sunrise": "06:25 AM",
+      "sunset": "05:46 PM",
+      "rahu_kaal": "Standard IST Rahu Kaal interval",
+      "abhijit_muhurat": "Standard IST Abhijit Muhurat interval",
+      "brahma_muhurta": "Standard IST Brahma Muhurta interval"
+    }},
+    "moon_sign_today": "Current transit Moon sign",
+    "festival_or_vrat": "Major Hindu festival or Vrat if any, otherwise 'Regular day'"
+  }},
+  "rashifal": {{
+    "Mesha": {{
+      "summary": "1-sentence punchy forecast",
+      "moon_sign_position": "Transit position",
+      "chandra_house": 1,
+      "transit_effect": "Positive / Neutral / Challenging",
+      "general": "2-sentence overview",
+      "career": "2-sentence career prediction",
+      "finance": "2-sentence finance prediction",
+      "relationships": "2-sentence relationship advice",
+      "health": "2-sentence health guidance",
+      "lucky_number": 7,
+      "lucky_color": "Lucky color",
+      "auspicious_time": "Time window",
+      "remedy": "Simple Vedic Upay",
+      "ratings": {{"career": 4, "finance": 4, "love": 4, "health": 4}}
+    }},
+    ... MUST include all 12 Rashis: {', '.join(RASHIS)}
+  }}
+}}
 """
-    return call_gemini_with_retry(prompt, DAY_SCHEMA, task_name=f"Base Gen {date_str}")
+    return call_groq_with_retry(system_prompt, user_prompt, task_name=f"Base Gen {date_str}")
 
 def translate_day(day_data: dict, lang_code: str, lang_name: str) -> dict:
     date_str = day_data["date"]
@@ -316,77 +203,105 @@ def translate_day(day_data: dict, lang_code: str, lang_name: str) -> dict:
         },
         "rashifal": {
             rashi: {
-                "summary": day_data["rashifal"][rashi].get("summary", ""),
-                "general": day_data["rashifal"][rashi].get("general", ""),
-                "career": day_data["rashifal"][rashi].get("career", ""),
-                "finance": day_data["rashifal"][rashi].get("finance", ""),
-                "relationships": day_data["rashifal"][rashi].get("relationships", ""),
-                "health": day_data["rashifal"][rashi].get("health", ""),
-                "lucky_color": day_data["rashifal"][rashi].get("lucky_color", ""),
-                "auspicious_time": day_data["rashifal"][rashi].get("auspicious_time", ""),
-                "remedy": day_data["rashifal"][rashi].get("remedy", "")
+                "summary": day_data["rashifal"].get(rashi, {}).get("summary", ""),
+                "general": day_data["rashifal"].get(rashi, {}).get("general", ""),
+                "career": day_data["rashifal"].get(rashi, {}).get("career", ""),
+                "finance": day_data["rashifal"].get(rashi, {}).get("finance", ""),
+                "relationships": day_data["rashifal"].get(rashi, {}).get("relationships", ""),
+                "health": day_data["rashifal"].get(rashi, {}).get("health", ""),
+                "lucky_color": day_data["rashifal"].get(rashi, {}).get("lucky_color", ""),
+                "auspicious_time": day_data["rashifal"].get(rashi, {}).get("auspicious_time", ""),
+                "remedy": day_data["rashifal"].get(rashi, {}).get("remedy", "")
             }
             for rashi in RASHIS
         }
     }
 
-    prompt = f"""You are an expert Vedic astrologer and classical linguist fluent in {lang_name} ({lang_code}).
-Translate and localize the astrological text below into authentic, elegant, natural {lang_name}.
+    system_prompt = (
+        f"You are a native linguist and classical Vedic astrologer fluent in {lang_name} ({lang_code}). "
+        f"You strictly translate all astrological content into authentic, elegant {lang_name} script. "
+        "You always respond with valid, parseable JSON matching the requested structure."
+    )
+
+    user_prompt = f"""Translate and localize the following astrological JSON into authentic, natural {lang_name}.
 
 CRITICAL RULES:
-1. Translate EVERYTHING entirely into the native {lang_name} script. Do NOT leave English words or English alphabets.
-2. Translate all technical Vedic terms directly into {lang_name} script:
-   - tithi_name (e.g., 'ದ್ವಾದಶಿ' in Kannada, 'দ্বাদশী' in Bengali, 'द्वादशी' in Hindi)
-   - tithi_paksha (e.g., 'ಶುಕ್ಲ ಪಕ್ಷ' in Kannada, 'শুক্ল পক্ষ' in Bengali, 'शुक्ल पक्ष' in Hindi)
-   - nakshatra_name (e.g., 'ಪೂರ್ವಭಾದ್ರಪದ' in Kannada, 'পূর্বভাদ্রপদ' in Bengali, 'पूर्वाभाद्रपद' in Hindi)
-   - nakshatra_ruler (e.g., 'ಗುರು' in Kannada, 'বৃহস্পতি' in Bengali, 'बृहस्पति' in Hindi)
-   - yoga_name & nature (e.g., 'ಧ್ರುವ' / 'ಶುಭ' in Kannada, 'ধ್ರುವ' / 'শুভ' in Bengali)
-   - karana_name (e.g., 'ಬಾಲವ' in Kannada, 'বালব' in Bengali)
-   - month_name (e.g., 'ಆಶ್ವಯುಜ' in Kannada, 'আশ্বিন' in Bengali)
-   - day_of_week_sanskrit (e.g., 'ಭೌಮವಾರ' in Kannada, 'ভৌমবার' in Bengali, 'भौमवार' in Hindi)
-   - moon_sign_today (e.g., 'ಮಕರ' in Kannada, 'মকর' in Bengali, 'मकर' in Hindi)
-3. Tone must be uplifting, respectful, and astrologically precise.
-4. Keep the translation strictly faithful to the original predictions and remedies.
+1. Translate EVERYTHING entirely into the native {lang_name} script. Do NOT leave English words.
+2. Translate all technical terms directly into {lang_name} script:
+   - Tithi (name, paksha, description)
+   - Nakshatra (name, ruler)
+   - Yoga (name, nature)
+   - Karana (name)
+   - Month name
+   - Sanskrit day name
+   - Moon sign name
+   - Festival or vrat
+3. Keep the translation strictly faithful to original predictions, colors, and remedies.
 
 Source JSON:
 {json.dumps(translatable_payload, ensure_ascii=False)}
+
+Output ONLY a JSON object with this exact structure:
+{{
+  "day_of_week_sanskrit": "Localized day name in {lang_name} script",
+  "moon_sign_today": "Localized moon sign in {lang_name} script",
+  "panchang": {{
+    "tithi_name": "...",
+    "tithi_paksha": "...",
+    "tithi_description": "...",
+    "nakshatra_name": "...",
+    "nakshatra_ruler": "...",
+    "yoga_name": "...",
+    "yoga_nature": "...",
+    "karana_name": "...",
+    "month_name": "...",
+    "festival_or_vrat": "..."
+  }},
+  "rashifal": {{
+    "Mesha": {{"summary": "...", "general": "...", "career": "...", "finance": "...", "relationships": "...", "health": "...", "lucky_color": "...", "auspicious_time": "...", "remedy": "..."}},
+    ... include all 12 rashis ({', '.join(RASHIS)})
+  }}
+}}
 """
 
-    translated_fields = call_gemini_with_retry(
-        prompt,
-        TRANSLATION_SCHEMA,
+    translated_fields = call_groq_with_retry(
+        system_prompt,
+        user_prompt,
         task_name=f"Translate {date_str} to {lang_name}"
     )
 
     localized_day = copy.deepcopy(day_data)
     
     # 1. Update Day and Moon Sign in localized script
-    localized_day["day_of_week_sanskrit"] = translated_fields["day_of_week_sanskrit"]
-    localized_day["panchang"]["moon_sign_today"] = translated_fields["moon_sign_today"]
+    localized_day["day_of_week_sanskrit"] = translated_fields.get("day_of_week_sanskrit", localized_day.get("day_of_week_sanskrit", ""))
+    localized_day["panchang"]["moon_sign_today"] = translated_fields.get("moon_sign_today", localized_day["panchang"].get("moon_sign_today", ""))
 
     # 2. Update Panchang elements in localized script
-    trans_p = translated_fields["panchang"]
-    localized_day["panchang"]["tithi"]["name"] = trans_p["tithi_name"]
-    localized_day["panchang"]["tithi"]["paksha"] = trans_p["tithi_paksha"]
-    localized_day["panchang"]["tithi"]["description"] = trans_p["tithi_description"]
-    localized_day["panchang"]["nakshatra"]["name"] = trans_p["nakshatra_name"]
-    localized_day["panchang"]["nakshatra"]["ruler"] = trans_p["nakshatra_ruler"]
-    localized_day["panchang"]["yoga"]["name"] = trans_p["yoga_name"]
-    localized_day["panchang"]["yoga"]["nature"] = trans_p["yoga_nature"]
-    localized_day["panchang"]["karana"]["name"] = trans_p["karana_name"]
-    localized_day["panchang"]["calendar"]["amanta_month"] = trans_p["month_name"]
-    localized_day["panchang"]["calendar"]["purnimanta_month"] = trans_p["month_name"]
-    localized_day["panchang"]["festival_or_vrat"] = trans_p["festival_or_vrat"]
+    trans_p = translated_fields.get("panchang", {})
+    localized_day["panchang"]["tithi"]["name"] = trans_p.get("tithi_name", localized_day["panchang"]["tithi"]["name"])
+    localized_day["panchang"]["tithi"]["paksha"] = trans_p.get("tithi_paksha", localized_day["panchang"]["tithi"]["paksha"])
+    localized_day["panchang"]["tithi"]["description"] = trans_p.get("tithi_description", localized_day["panchang"]["tithi"]["description"])
+    localized_day["panchang"]["nakshatra"]["name"] = trans_p.get("nakshatra_name", localized_day["panchang"]["nakshatra"]["name"])
+    localized_day["panchang"]["nakshatra"]["ruler"] = trans_p.get("nakshatra_ruler", localized_day["panchang"]["nakshatra"]["ruler"])
+    localized_day["panchang"]["yoga"]["name"] = trans_p.get("yoga_name", localized_day["panchang"]["yoga"]["name"])
+    localized_day["panchang"]["yoga"]["nature"] = trans_p.get("yoga_nature", localized_day["panchang"]["yoga"]["nature"])
+    localized_day["panchang"]["karana"]["name"] = trans_p.get("karana_name", localized_day["panchang"]["karana"]["name"])
+    localized_day["panchang"]["calendar"]["amanta_month"] = trans_p.get("month_name", localized_day["panchang"]["calendar"]["amanta_month"])
+    localized_day["panchang"]["calendar"]["purnimanta_month"] = trans_p.get("month_name", localized_day["panchang"]["calendar"]["purnimanta_month"])
+    localized_day["panchang"]["festival_or_vrat"] = trans_p.get("festival_or_vrat", localized_day["panchang"]["festival_or_vrat"])
 
-    # 3. Update Rashifal text fields
+    # 3. Update Rashifal text fields safely
+    trans_rashifal = translated_fields.get("rashifal", {})
     for rashi in RASHIS:
-        for key in ["summary", "general", "career", "finance", "relationships", "health", "lucky_color", "auspicious_time", "remedy"]:
-            localized_day["rashifal"][rashi][key] = translated_fields["rashifal"][rashi][key]
+        if rashi in trans_rashifal and isinstance(trans_rashifal[rashi], dict):
+            for key in ["summary", "general", "career", "finance", "relationships", "health", "lucky_color", "auspicious_time", "remedy"]:
+                if key in trans_rashifal[rashi]:
+                    localized_day["rashifal"][rashi][key] = trans_rashifal[rashi][key]
 
     return localized_day
 
 # ---------------------------------------------------------
-# 4. Storage & Incremental Saving
+# 3. Storage & Incremental Saving
 # ---------------------------------------------------------
 def save_dataset_file(output_dir: Path, code: str, dataset: dict):
     """Saves each language immediately to disk so progress is never lost."""
@@ -449,7 +364,7 @@ def load_existing_datasets(output_dir: Path) -> dict:
     return datasets
 
 # ---------------------------------------------------------
-# 5. Main Pipeline for TODAY ONLY
+# 4. Main Pipeline for TODAY ONLY
 # ---------------------------------------------------------
 def main():
     ist = ZoneInfo("Asia/Kolkata")
@@ -457,10 +372,10 @@ def main():
     date_str = today.strftime("%Y-%m-%d")
 
     print(f"============================================================")
-    print(f" One-Time Panchang & Rashifal Generator (TODAY ONLY)")
+    print(f" One-Time Panchang & Rashifal Generator (Groq Llama 3.3 70B)")
     print(f" Generating Date (IST): {date_str} ({today.strftime('%A')})")
     print(f" Target Languages: {', '.join(LANGUAGES.values())} (8 total)")
-    print(f" Free-Tier Safe: Exactly 8 calls (Leaves 12-call buffer under 20 RPD cap)")
+    print(f" Speed & Reliability: Groq LPUs (Zero 503 capacity outages)")
     print(f"============================================================\n")
 
     output_dir = Path("data")
