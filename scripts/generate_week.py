@@ -3,12 +3,15 @@ generate_week.py
 Maintains a rolling forecast of authentic Indian Panchanga and Vedic Rashifal
 in 8 languages using Gemini 3.8 Flash.
 
-Resumable Architecture:
+Features:
+- Complete Native Localization: Translates all Panchang technical terms (Tithi name,
+  Paksha, Nakshatra, Ruler, Yoga, Nature, Karana, Sanskrit Day, Moon Sign, Month)
+  directly into the regional script (Kannada, Hindi, Bengali, Tamil, Telugu, etc.).
 - True State Persistence: Saves each language to disk immediately upon completion.
-- Exact Resumption: If a network/503 spike interrupts the run, the next attempt
-  checks disk, skips already-completed languages (0 API calls wasted), and resumes
+- Exact Resumption: Skips already-completed languages (0 API calls wasted) and resumes
   strictly from the missing language.
 - Auto-Folder Creation: Guarantees that data/ and app/src/main/assets/ are always created.
+- Quota Safety: 8 calls per full day. Max 2 days per run (<= 16 calls <= 20 RPD free tier limit).
 """
 
 import copy
@@ -169,16 +172,31 @@ DAY_SCHEMA = {
     "required": ["date", "day_of_week", "panchang", "rashifal"]
 }
 
+# Translation Schema: Includes all Panchang elements for native script display
 TRANSLATION_SCHEMA = {
     "type": "OBJECT",
     "properties": {
+        "day_of_week_sanskrit": {"type": "STRING"},
+        "moon_sign_today": {"type": "STRING"},
         "panchang": {
             "type": "OBJECT",
             "properties": {
+                "tithi_name": {"type": "STRING"},
+                "tithi_paksha": {"type": "STRING"},
                 "tithi_description": {"type": "STRING"},
+                "nakshatra_name": {"type": "STRING"},
+                "nakshatra_ruler": {"type": "STRING"},
+                "yoga_name": {"type": "STRING"},
+                "yoga_nature": {"type": "STRING"},
+                "karana_name": {"type": "STRING"},
+                "month_name": {"type": "STRING"},
                 "festival_or_vrat": {"type": "STRING"}
             },
-            "required": ["tithi_description", "festival_or_vrat"]
+            "required": [
+                "tithi_name", "tithi_paksha", "tithi_description",
+                "nakshatra_name", "nakshatra_ruler", "yoga_name",
+                "yoga_nature", "karana_name", "month_name", "festival_or_vrat"
+            ]
         },
         "rashifal": {
             "type": "OBJECT",
@@ -207,7 +225,7 @@ TRANSLATION_SCHEMA = {
             "required": RASHIS
         }
     },
-    "required": ["panchang", "rashifal"]
+    "required": ["day_of_week_sanskrit", "moon_sign_today", "panchang", "rashifal"]
 }
 
 # ---------------------------------------------------------
@@ -265,10 +283,22 @@ Ensure all 12 Rashis ({', '.join(RASHIS)}) are populated with high quality.
 
 def translate_day(day_data: dict, lang_code: str, lang_name: str) -> dict:
     date_str = day_data["date"]
+    p = day_data["panchang"]
+    
     translatable_payload = {
+        "day_of_week_sanskrit": day_data.get("day_of_week_sanskrit", ""),
+        "moon_sign_today": p.get("moon_sign_today", ""),
         "panchang": {
-            "tithi_description": day_data["panchang"]["tithi"].get("description", ""),
-            "festival_or_vrat": day_data["panchang"].get("festival_or_vrat", "")
+            "tithi_name": p["tithi"].get("name", ""),
+            "tithi_paksha": p["tithi"].get("paksha", ""),
+            "tithi_description": p["tithi"].get("description", ""),
+            "nakshatra_name": p["nakshatra"].get("name", ""),
+            "nakshatra_ruler": p["nakshatra"].get("ruler", ""),
+            "yoga_name": p["yoga"].get("name", ""),
+            "yoga_nature": p["yoga"].get("nature", ""),
+            "karana_name": p["karana"].get("name", ""),
+            "month_name": p["calendar"].get("amanta_month", ""),
+            "festival_or_vrat": p.get("festival_or_vrat", "")
         },
         "rashifal": {
             rashi: {
@@ -286,10 +316,21 @@ def translate_day(day_data: dict, lang_code: str, lang_name: str) -> dict:
     prompt = f"""You are an expert Vedic Astrologer and linguist specializing in {lang_name} ({lang_code}).
 Translate and culturally adapt the following daily Panchanga and Rashifal text from English into authentic {lang_name}.
 
-Rules:
-1. Write natively in {lang_name} script with authentic Vedic astrological terminology.
-2. Tone must be uplifting, respectful, and astrologically precise.
-3. Keep the translation strictly faithful to the original predictions and remedies.
+Crucial Localization Rules:
+1. Write natively in {lang_name} script for ALL fields.
+2. Panchanga Terms (Must be written in {lang_name} script, NOT English):
+   - tithi_name (e.g., 'ದಶಮಿ' in Kannada, 'দশমী' in Bengali, 'दशमी' in Hindi)
+   - tithi_paksha (e.g., 'ಶುಕ್ಲ ಪಕ್ಷ' in Kannada, 'শুক্ল পক্ষ' in Bengali, 'शुक्ल पक्ष' in Hindi)
+   - nakshatra_name (e.g., 'ಶ್ರವಣ' in Kannada, 'শ্রবণা' in Bengali, 'श्रवण' in Hindi)
+   - nakshatra_ruler (e.g., 'ಚಂದ್ರ' in Kannada, 'চন্দ্র' in Bengali, 'चन्द्र' in Hindi)
+   - yoga_name (e.g., 'ಧೃತಿ' in Kannada, 'ಧೃತಿ' in Bengali, 'धृति' in Hindi)
+   - yoga_nature (e.g., 'ಶುಭ' / Auspicious in {lang_name} script)
+   - karana_name (e.g., 'ತೈತಿಲ' in Kannada, 'তৈতিল' in Bengali, 'तैमिला' in Hindi)
+   - month_name (e.g., 'ಆಶ್ವಯುಜ' in Kannada, 'আশ্বিন' in Bengali, 'आश्विन' in Hindi)
+   - day_of_week_sanskrit (e.g., 'ಭೌಮವಾರ' in Kannada, 'ভৌমবার' in Bengali, 'भौमवार' in Hindi)
+   - moon_sign_today (e.g., 'ಮಕರ' in Kannada, 'মকর' in Bengali, 'मकर' in Hindi)
+3. Tone must be uplifting, respectful, and astrologically precise.
+4. Keep the translation strictly faithful to the original predictions and remedies.
 
 Source JSON:
 {json.dumps(translatable_payload, ensure_ascii=False)}
@@ -302,9 +343,26 @@ Source JSON:
     )
 
     localized_day = copy.deepcopy(day_data)
-    localized_day["panchang"]["tithi"]["description"] = translated_fields["panchang"]["tithi_description"]
-    localized_day["panchang"]["festival_or_vrat"] = translated_fields["panchang"]["festival_or_vrat"]
+    
+    # 1. Update Day and Moon Sign in localized script
+    localized_day["day_of_week_sanskrit"] = translated_fields["day_of_week_sanskrit"]
+    localized_day["panchang"]["moon_sign_today"] = translated_fields["moon_sign_today"]
 
+    # 2. Update Panchang elements in localized script
+    trans_p = translated_fields["panchang"]
+    localized_day["panchang"]["tithi"]["name"] = trans_p["tithi_name"]
+    localized_day["panchang"]["tithi"]["paksha"] = trans_p["tithi_paksha"]
+    localized_day["panchang"]["tithi"]["description"] = trans_p["tithi_description"]
+    localized_day["panchang"]["nakshatra"]["name"] = trans_p["nakshatra_name"]
+    localized_day["panchang"]["nakshatra"]["ruler"] = trans_p["nakshatra_ruler"]
+    localized_day["panchang"]["yoga"]["name"] = trans_p["yoga_name"]
+    localized_day["panchang"]["yoga"]["nature"] = trans_p["yoga_nature"]
+    localized_day["panchang"]["karana"]["name"] = trans_p["karana_name"]
+    localized_day["panchang"]["calendar"]["amanta_month"] = trans_p["month_name"]
+    localized_day["panchang"]["calendar"]["purnimanta_month"] = trans_p["month_name"]
+    localized_day["panchang"]["festival_or_vrat"] = trans_p["festival_or_vrat"]
+
+    # 3. Update Rashifal text fields
     for rashi in RASHIS:
         for key in ["summary", "general", "career", "finance", "relationships", "health", "lucky_color", "auspicious_time", "remedy"]:
             localized_day["rashifal"][rashi][key] = translated_fields["rashifal"][rashi][key]
@@ -392,6 +450,7 @@ def main():
     print(f" Resumable Daily Panchang & Rashifal Generator (Gemini Flash)")
     print(f" Current Date (IST): {today.isoformat()} | Advance Target: {tomorrow.isoformat()}")
     print(f" Languages: {', '.join(LANGUAGES.values())} (8 total)")
+    print(f" Full Regional Script Localization: Active for Panchang & Rashifal")
     print(f"============================================================\n")
 
     output_dir = Path("data")
