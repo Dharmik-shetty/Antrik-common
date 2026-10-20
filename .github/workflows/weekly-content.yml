@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,11 +27,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install groq
+          pip install groq google-genai
 
       - name: Generate Daily Panchang & Rashifal (with auto-resume retry)
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           PYTHONUNBUFFERED: "1"
         run: |
           for attempt in 1 2 3; do
@@ -58,7 +61,19 @@ jobs:
           if [ -d "app/src/main/assets" ]; then
             git add app/src/main/assets/panchang-rashifal-week*.json
           fi
-          git diff --cached --quiet || (
+          if ! git diff --cached --quiet; then
             git commit -m "chore(astrology): update rolling panchang and rashifal [skip ci]"
-            git push
-          )
+            for attempt in 1 2 3 4 5; do
+              echo "Push attempt $attempt..."
+              if git pull --rebase origin main && git push origin main; then
+                echo "Successfully pushed astrology data to main!"
+                exit 0
+              fi
+              echo "Push failed or rejected; waiting 5s before retrying..."
+              sleep 5
+            done
+            echo "Failed to push to main after 5 attempts."
+            exit 1
+          else
+            echo "No changes detected to commit."
+          fi
