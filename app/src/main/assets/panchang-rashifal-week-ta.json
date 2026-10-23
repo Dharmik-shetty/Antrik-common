@@ -1,314 +1,17 @@
 {
   "metadata": {
-    "generated_at": "2026-10-22T15:33:39.646553+05:30",
+    "generated_at": "2026-10-23T15:29:39.204916+05:30",
     "language_code": "ta",
     "language_name": "Tamil",
     "timezone": "Asia/Kolkata",
     "reference_standard": "New Delhi / Central India (IST)",
     "ayanamsha": "Lahiri / Chitrapaksha",
     "coverage": {
-      "start_date": "2026-10-22",
-      "end_date": "2026-10-23"
+      "start_date": "2026-10-23",
+      "end_date": "2026-10-24"
     }
   },
   "days": {
-    "2026-10-22": {
-      "date": "2026-10-22",
-      "day_of_week": "Thursday",
-      "day_of_week_sanskrit": "வியாழன்",
-      "panchang": {
-        "tithi": {
-          "name": "ஷுக்லா த்வாதசி",
-          "paksha": "ஷுக்லா",
-          "description": "விஷ்ணு தேவனைப் போற்றுவதற்கு புனிதமானது, நோன்பு உடைப்பு மற்றும் புண்ணிய செயல்கள் செய்யப்பட வேண்டும்."
-        },
-        "nakshatra": {
-          "name": "பூர்வ பத்ரபதா",
-          "ruler": "பிரஹஸ்பதி (குரு)",
-          "pada": 1,
-          "deity": "Aja Ekapada"
-        },
-        "yoga": {
-          "name": "த்ருவா",
-          "nature": "அனுகூல"
-        },
-        "karana": {
-          "name": "பவா",
-          "nature": "Benefic"
-        },
-        "calendar": {
-          "vikram_samvat": 2083,
-          "shaka_samvat": 1948,
-          "amanta_month": "அஷ்வின்",
-          "purnimanta_month": "அஷ்வின்",
-          "ayana": "Dakshinayana",
-          "ritu": "Sharad (Autumn)"
-        },
-        "timings_ist": {
-          "sunrise": "06:26 AM",
-          "sunset": "05:44 PM",
-          "rahu_kaal": "01:30 PM - 02:55 PM",
-          "abhijit_muhurat": "11:43 AM - 12:28 PM",
-          "brahma_muhurta": "04:45 AM - 05:35 AM"
-        },
-        "moon_sign_today": "கும்பம்",
-        "festival_or_vrat": "குரு பிரதோஷ் வ்ரதம் / கோவத்ஸ த்வாதசி தயாரிப்பு"
-      },
-      "rashifal": {
-        "Mesha": {
-          "summary": "நீண்டகாலம் கனவாக இருந்த இலக்குகளை நிறைவேற்றவும், சமூக வட்டத்தை விரிவுபடுத்தவும் ஒரு அதிசயமான நாள்.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 11,
-          "transit_effect": "Positive",
-          "general": "சந்திரன் 11ஆம் வீட்டில் சென்று எதிர்பாராத லாபங்களையும், சக பணியாளர்களின் பரவலான ஒத்துழைப்பையும் தருகிறது. உங்கள் இயல்பான உற்சாகம் மதிப்புமிக்க கூட்டாளிகள் மற்றும் வழிகாட்டிகளை இன்றே ஈர்க்கும்.",
-          "career": "தொழில்முறை நெட்வொர்க்கிங் லாபகரமான வழிகளைத் திறக்கிறது, எதிர்கால உயர்தர முயற்சிகளுக்கான வாய்ப்புகளை உருவாக்குகிறது. கூட்டுப் பணிகள் உங்கள் இயக்கமான தலைமையால் மென்மையாக முன்னேறும்.",
-          "finance": "நிதி ஓட்டம் வலுவாக உள்ளது, கடந்த கால ஊக முதலீடுகளில் வருவாய் கிடைக்கும் வாய்ப்பு உள்ளது. நீண்டகால செல்வ வளர்ச்சிக்காக பட்ஜெட்டிங் மிகவும் பயனுள்ளதாக இருக்கும்.",
-          "relationships": "நண்பர்கள் உண்மையான வெப்பத்தை வழங்கி, தனிப்பட்ட முன்னுரிமைகளை தெளிவுபடுத்த உதவுகின்றனர். காதல் உறவுகள் நேர்மையான, எதிர்கால நோக்கமுள்ள உரையாடல்களால் மலர்கின்றன.",
-          "health": "உற்சாகம் உறுதியானது, ஆனால் நீண்டநேர இயக்கம் காரணமாக குதிகால் சோர்வு ஏற்படலாம். போதுமான நீர் குடித்து, மாலை நேரத்தில் மென்மையான நீட்டிப்புகளை செய்யவும்.",
-          "lucky_number": 9,
-          "lucky_color": "சிவப்பு",
-          "auspicious_time": "10:30 - 12:00",
-          "remedy": "விஷ்ணு தேவனுக்கு மஞ்சள் மலர்களை அர்ப்பணித்து, \"ஓம் பிரஹஸ்பதயே நமஹ\" என்று ஜபிக்கவும்.",
-          "ratings": {
-            "career": 5,
-            "finance": 5,
-            "love": 4,
-            "health": 4
-          }
-        },
-        "Vrishabha": {
-          "summary": "தொழில்முறை அதிகாரம் குறிப்பிடத்தக்க முறையில் உயர்ந்து, அர்ப்பணிப்பு நியாயமான அங்கீகாரத்தைப் பெறுகிறது.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 10,
-          "transit_effect": "Positive",
-          "general": "சந்திரன் கர்மா வீட்டைச் செயல்படுத்துவதால், உங்கள் முயற்சிகள் மேல் அதிகாரிகளால் கவனிக்கப்பட்டு பாராட்டப்படும். அதிகரிக்கும் பொறுப்புகளை சமநிலையாக நிர்வகிக்கவும்.",
-          "career": "மேற்பார்வையாளர்கள் உங்கள் நிலைத்தன்மையை கவனித்து, எதிர்கால தலைமை பொறுப்புகளுக்கு உங்களைத் தயாராக்குகின்றனர். சிக்கலான காலக்கெடுவுகளை கட்டமைப்பான தீர்மானத்துடன் சமாளிக்கவும்.",
-          "finance": "நிலையான தொழில் முன்னேற்றம் நிதி நம்பிக்கையையும், போனஸ் வாய்ப்புகளையும் தருகிறது. இன்று திடீரென மின்னணு பொருட்களை வாங்குவதை தவிர்க்கவும்.",
-          "relationships": "தொழில் நேரம் குடும்ப நேரத்தை குறைக்கலாம்; முன்னோக்கிய தொடர்பு அவசியம். அன்புக்குரியவர்களுக்கு ஒரு சுருக்கமான, மனதைக் கவரும் அழைப்பு ஆழமான ஒற்றுமையை பேணும்.",
-          "health": "உயர் தொழில் அழுத்தம் இருந்தாலும் உடல் சக்தி நிலையானது. சிறிய தோள் அழுத்தத்தைத் தவிர்க்க மனநிறைவு மூச்சை முன்னுரிமை கொடுக்கவும்.",
-          "lucky_number": 6,
-          "lucky_color": "இளஞ்சிவப்பு நீலம்",
-          "auspicious_time": "14:00 - 15:30",
-          "remedy": "வீட்டிலிருந்து வெளியேறுவதற்கு முன் நெற்றியில் மென்மையான சுண்ணாம்பு திலாக் போடவும்.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 3,
-            "health": 4
-          }
-        },
-        "Mithuna": {
-          "summary": "A wave of optimism fuels philosophical insight, fortunate developments, and higher learning.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 9,
-          "transit_effect": "Positive",
-          "general": "The 9th house transit illuminates your spiritual and intellectual inclinations, generating fortuitous coincidences. Trust your intuitive instincts when making strategic decisions.",
-          "career": "Collaborations with overseas clients or academics receive an auspicious cosmic boost. You will articulate visionary ideas that inspire your team members.",
-          "finance": "Fortune smiles on investments linked to education, communication, and creative publications. Maintain fiscal prudence regarding international transactions.",
-          "relationships": "Engaging in intellectual and cultural discussions with your partner deepens mutual respect. Single natives may connect with someone possessing a distinct philosophical worldview.",
-          "health": "Mental tranquility reigns, enhancing physical endurance and vitality. A walk in fresh air will revitalize your respiratory system.",
-          "lucky_number": 5,
-          "lucky_color": "Emerald Green",
-          "auspicious_time": "09:00 AM - 10:30 AM",
-          "remedy": "Offer green grass (Durva) or whole moong dal to a cow.",
-          "ratings": {
-            "career": 4,
-            "finance": 4,
-            "love": 5,
-            "health": 5
-          }
-        },
-        "Karka": {
-          "summary": "A contemplative day emphasizing introspection, research, and emotional self-mastery.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 8,
-          "transit_effect": "Challenging",
-          "general": "As your sign lord traverses the 8th house, guard against emotional sensitivity and sudden changes of plans. Treat unexpected delays as opportunities to refine your approach.",
-          "career": "Avoid stepping into corporate politics or signing unverified contracts today. Your analytical prowess will help uncover hidden errors in vital documentation.",
-          "finance": "Keep joint finances and tax documents organized to avoid minor discrepancies. Defer major speculative bets until the Moon transits to a supportive bhava.",
-          "relationships": "Vulnerability will be your greatest bridge; express heartfelt feelings calmly rather than withdrawing. Listen patiently to your partner's unvoiced concerns.",
-          "health": "Watch for minor indigestion or sluggish metabolism due to erratic meals. Opt for warm, light, freshly prepared meals today.",
-          "lucky_number": 2,
-          "lucky_color": "Silver White",
-          "auspicious_time": "04:00 PM - 05:15 PM",
-          "remedy": "Recite the Maha Mrityunjaya Mantra 11 times and drink water from a silver vessel.",
-          "ratings": {
-            "career": 3,
-            "finance": 3,
-            "love": 3,
-            "health": 3
-          }
-        },
-        "Simha": {
-          "summary": "Interpersonal harmony flourishes, enhancing strategic alliances and mutual understanding.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 7,
-          "transit_effect": "Positive",
-          "general": "With the Moon gracing your 7th house, interpersonal dynamics take center stage, unlocking productive negotiations. Compromise and empathy will open doors that raw authority cannot.",
-          "career": "Client interactions are highly fruitful, leading to long-term collaborative agreements. Maintain transparent dialogue with business partners to optimize shared goals.",
-          "finance": "Financial gains arise through joint ventures and public relations activities. Review existing contracts to ensure equitable division of margins.",
-          "relationships": "Spousal understanding is elevated, bringing warmth and shared joys to domestic life. Unmarried natives will enjoy delightful progress in marriage alliances.",
-          "health": "Balance out physical energy with proper hydration and mindful resting intervals. Avoid excess salt intake to support kidney and circulatory health.",
-          "lucky_number": 1,
-          "lucky_color": "Golden Yellow",
-          "auspicious_time": "11:30 AM - 01:00 PM",
-          "remedy": "Offer arghya (water with a pinch of turmeric and kumkum) to Surya Dev in the morning.",
-          "ratings": {
-            "career": 4,
-            "finance": 4,
-            "love": 5,
-            "health": 4
-          }
-        },
-        "Kanya": {
-          "summary": "Supreme efficiency enables you to resolve pending issues and outpace competition.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 6,
-          "transit_effect": "Positive",
-          "general": "The 6th house transit of Chandra activates your pragmatic problem-solving and competitive edge. Your disciplined efforts will yield tangible results across all daily responsibilities.",
-          "career": "You will effectively eliminate operational bottlenecks and deliver complex tasks ahead of time. Competitors will find it difficult to match your meticulous precision.",
-          "finance": "Favorable conditions emerge for debt clearance and renegotiating favorable payment terms. Prudent budgeting curbs unwanted discretionary expenses.",
-          "relationships": "Avoid hyper-critical tendencies at home; express appreciation for small gestures. Constructive conversations will dissolve misunderstandings with siblings.",
-          "health": "Vitality is elevated as healthy habits and dietary discipline take root. Incorporate gut-friendly probiotics into your afternoon diet.",
-          "lucky_number": 5,
-          "lucky_color": "Olive Green",
-          "auspicious_time": "08:15 AM - 09:45 AM",
-          "remedy": "Feed soaked green gram or sprouted moong to birds in the morning.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 3,
-            "health": 4
-          }
-        },
-        "Tula": {
-          "summary": "Creative inspiration peaks, making this a marvelous day for romance, art, and intellectual pursuits.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 5,
-          "transit_effect": "Positive",
-          "general": "Moon's passage through your 5th house kindles your aesthetic sensibilities and joy of expression. Engage in pursuits that spark your curiosity and nurture your inner genius.",
-          "career": "Your innovative presentations will captivate key decision-makers and superiors. Academic and creative professionals will experience breakthroughs in their ongoing work.",
-          "finance": "Intuitive market assessment supports calculated investments in well-researched avenues. Spending on cultural enrichment or hobby-related tools brings genuine fulfillment.",
-          "relationships": "Romance is delightfully refreshed with playful banter and emotional closeness. Spending quality time with children brings deep domestic bliss.",
-          "health": "Energy levels are radiant; gentle cardiovascular exercises will sustain your cheerful mood. Ensure restful sleep by unplugging screens early.",
-          "lucky_number": 7,
-          "lucky_color": "Cream",
-          "auspicious_time": "03:15 PM - 04:45 PM",
-          "remedy": "Light a ghee lamp before Goddess Lakshmi and offer fragrant white flowers.",
-          "ratings": {
-            "career": 4,
-            "finance": 4,
-            "love": 5,
-            "health": 5
-          }
-        },
-        "Vrischika": {
-          "summary": "Cultivate tranquility at home while anchoring your emotional stability amidst busy obligations.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 4,
-          "transit_effect": "Neutral",
-          "general": "Chandra in your 4th house draws your focus toward domestic comfort, real estate matters, and peace of mind. Balancing professional drives with domestic duties will be essential today.",
-          "career": "Focus on backend planning, structural documentation, and remote coordination today. Avoid rushing into new commitments until existing deliverables are stable.",
-          "finance": "Expenditure toward vehicle maintenance, home enhancement, or domestic comfort is likely. Ensure careful inspection before signing real estate or property agreements.",
-          "relationships": "A parent or elder's guidance will illuminate an important personal choice. Approach delicate family discussions with unconditional patience.",
-          "health": "Chest and emotional comfort need attention; avoid heavy, oily meals in the evening. Calming pranayama like Anulom Vilom will soothe stress.",
-          "lucky_number": 3,
-          "lucky_color": "Coral Red",
-          "auspicious_time": "07:30 AM - 09:00 AM",
-          "remedy": "Touch your mother's or an elder woman's feet to seek blessings before starting work.",
-          "ratings": {
-            "career": 3,
-            "finance": 3,
-            "love": 4,
-            "health": 3
-          }
-        },
-        "Dhanu": {
-          "summary": "High valor, compelling communication, and short journeys generate uplifting milestones.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 3,
-          "transit_effect": "Positive",
-          "general": "The 3rd house transit ignites your courage and communication skills, making your outreach exceptionally magnetic. You will fearlessly take initiative and motivate those around you.",
-          "career": "Meetings, presentations, and marketing pitches yield remarkably productive results. Colleagues look to your decisive spirit to resolve operational deadlocks.",
-          "finance": "Short business trips or tech-enabled ventures yield profitable dividends. You can expect promising negotiations regarding future earning avenues.",
-          "relationships": "Sibling bonds strengthen as you offer dependable support and wise counsel. Social interactions bring lighthearted entertainment and refreshing connections.",
-          "health": "Physical agility and stamina are heightened; enjoy outdoor sports or fitness workouts. Protect your shoulders and neck from poor posture.",
-          "lucky_number": 3,
-          "lucky_color": "Saffron Yellow",
-          "auspicious_time": "09:30 AM - 11:00 AM",
-          "remedy": "Chant the Gayatri Mantra 24 times facing East during the morning hours.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 4,
-            "health": 5
-          }
-        },
-        "Makara": {
-          "summary": "Focus centers on wealth consolidation, family dialogue, and steady material security.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 2,
-          "transit_effect": "Positive",
-          "general": "With Chandra in the 2nd house, your speech carries persuasive weight, attracting both trust and financial benefits. A disciplined approach to your resources guarantees fruitful outcomes.",
-          "career": "Discussions regarding salary, compensation, or resource allocation will tip in your favor. Your practical, grounded perspective stabilizes workplace uncertainties.",
-          "finance": "A superb period for boosting your savings buffer and investing in secure fixed-income avenues. Family wealth shows positive indicators of long-term appreciation.",
-          "relationships": "Harmonious family gatherings and shared meals foster deep mutual trust. Choose gentle, measured words to keep domestic conversations serene.",
-          "health": "Pay attention to oral and throat hygiene; avoid excessively icy beverages. Gentle vocal warm-ups and herbal teas will maintain throat comfort.",
-          "lucky_number": 8,
-          "lucky_color": "Navy Blue",
-          "auspicious_time": "12:15 PM - 01:45 PM",
-          "remedy": "Donate roasted chana and jaggery to a temple or to needy individuals.",
-          "ratings": {
-            "career": 4,
-            "finance": 5,
-            "love": 4,
-            "health": 4
-          }
-        },
-        "Kumbha": {
-          "summary": "Personal radiance, fresh clarity, and renewed purpose place you firmly in the spotlight.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 1,
-          "transit_effect": "Positive",
-          "general": "With the Moon transiting your Janma Rashi, your intuitive presence and confidence attract admiration from all quarters. It is an auspicious time to launch personal wellness and leadership goals.",
-          "career": "You will navigate critical professional decisions with calm poise and keen mental clarity. Others naturally look to your visionary ideas for guidance and direction.",
-          "finance": "Financial perspective is clear and composed, allowing you to curb unnecessary outlays. Opportunities to monetize your specialized skills will present themselves.",
-          "relationships": "Your personal warmth and attentive demeanor make you the focal point of social circles. Honest, open-hearted conversations revitalize romance.",
-          "health": "Vital energy surges, enhancing physical resilience and mental composure. Spend a few quiet moments in morning meditation to ground this expansive energy.",
-          "lucky_number": 4,
-          "lucky_color": "Electric Blue",
-          "auspicious_time": "01:30 PM - 03:00 PM",
-          "remedy": "Light a mustard oil lamp near a Peepal tree in the evening and recite 'Om Sham Shanaicharaya Namaha'.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 5,
-            "health": 4
-          }
-        },
-        "Meena": {
-          "summary": "Prioritize restorative rest, spiritual contemplation, and strategic planning behind the scenes.",
-          "moon_sign_position": "Kumbha",
-          "chandra_house": 12,
-          "transit_effect": "Neutral",
-          "general": "Chandra's transit in your 12th house favors solitary research, spiritual introspection, and clearing backlogs. Conserve your energy and avoid taking on unnecessary external commitments.",
-          "career": "Engage in research, auditing, and confidential planning rather than high-profile public unveilings. Overseas associates and remote projects will yield favorable outcomes.",
-          "finance": "Expenditure on wellness, charitable acts, or travel may rise; monitor impulsive purchases. Maintain a clear ledger for all professional outlays.",
-          "relationships": "Seek meaningful solitude without completely disconnecting from your partner's emotional world. Compassionate communication prevents unwarranted misunderstandings.",
-          "health": "Give priority to deep, restful sleep to recharge your nervous system. Evening meditation and reducing screen time will soothe your eye strain.",
-          "lucky_number": 3,
-          "lucky_color": "Sea Green",
-          "auspicious_time": "05:00 PM - 06:15 PM",
-          "remedy": "Keep a square piece of silver in your wallet and offer water to the roots of a Tulsi plant.",
-          "ratings": {
-            "career": 3,
-            "finance": 3,
-            "love": 4,
-            "health": 3
-          }
-        }
-      }
-    },
     "2026-10-23": {
       "date": "2026-10-23",
       "day_of_week": "Friday",
@@ -597,6 +300,303 @@
           "lucky_color": "தங்க ஒக்ர்",
           "auspicious_time": "10:15 AM - 11:45 AM",
           "remedy": "பிரதோஷ் காலத்தில் சிவன் பஞ்சக்ஷர ஸ்தோத்திரம் அல்லது 'ஓம் நம சிவாய' ஜபிக்கவும்.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 5,
+            "health": 5
+          }
+        }
+      }
+    },
+    "2026-10-24": {
+      "date": "2026-10-24",
+      "day_of_week": "Saturday",
+      "day_of_week_sanskrit": "சனிவாரம்",
+      "panchang": {
+        "tithi": {
+          "name": "சதுர்ஷி",
+          "paksha": "शुक्ल",
+          "description": "இது சிவனின் அருளுடன் இணைக்கப்பட்டுள்ளது; ஆன்மீக தியாகம், எதிர்மறை பழக்கங்களை விட்டு விடுதல், மற்றும் உள்ளார்ந்த மோதல்களை கடக்க சிறப்பானது."
+        },
+        "nakshatra": {
+          "name": "ரேவதி",
+          "ruler": "புதன் (புதன்)",
+          "pada": 3,
+          "deity": "Pushan"
+        },
+        "yoga": {
+          "name": "வஜ்ரா",
+          "nature": "அதிர்ஷ்டமற்ற"
+        },
+        "karana": {
+          "name": "வணிஜா",
+          "nature": "Benefic"
+        },
+        "calendar": {
+          "vikram_samvat": 2083,
+          "shaka_samvat": 1948,
+          "amanta_month": "ஆஷ்வினம்",
+          "purnimanta_month": "ஆஷ்வினம்",
+          "ayana": "Dakshinayana",
+          "ritu": "Sharad"
+        },
+        "timings_ist": {
+          "sunrise": "06:28 AM",
+          "sunset": "05:43 PM",
+          "rahu_kaal": "09:17 AM - 10:41 AM",
+          "abhijit_muhurat": "11:43 AM - 12:28 PM",
+          "brahma_muhurta": "04:51 AM - 05:39 AM"
+        },
+        "moon_sign_today": "மீனம் (மீன ராசி)",
+        "festival_or_vrat": "கோஜகர வ்ரத் பூர்வ சன்ஹ்யா"
+      },
+      "rashifal": {
+        "Mesha": {
+          "summary": "நீண்டகாலத் திட்டங்களை மதிப்பீடு செய்ய பின்வாங்கி, தனிப்பட்ட செலவுகளை நன்கு நிர்வகிக்கவும்.",
+          "moon_sign_position": "12th House transit in Meena",
+          "chandra_house": 12,
+          "transit_effect": "Challenging",
+          "general": "பன்னிரண்டாம் வீட்டின் சந்திரன் உள் பார்வை மற்றும் திட்டமிடலை ஊக்குவிக்கிறது; உடனடி நடவடிக்கைகளை தவிர்த்து, ஆன்மீகப் படிப்பு அல்லது ஓய்வான படைப்பாற்றல் செயல்களில் ஈடுபடுங்கள்.",
+          "career": "வேலை இடத்தில் வெப்பமான விவாதங்களில் ஈடுபடாமல், முக்கிய நிர்வாக மாற்றங்களைத் தொடங்காமல் இருங்கள். நிலுவை பணிகளை முடித்து, ஒப்பந்தங்களை மீளாய்வு செய்ய கவனம் செலுத்துங்கள்.",
+          "finance": "அதிர்ஷ்டமற்ற வீட்டு செலவுகள் ஏற்படலாம்; கடுமையான பட்ஜெட்டை பின்பற்றவும். சந்திர நிலைமைகள் நிலைநிறுத்தப்படும் வரை பெரிய முதலீடுகளை தாமதிக்கவும்.",
+          "relationships": "தெளிவில்லாத அல்லது தவிர்க்கும் தொடர்புகள் தவறான புரிதல்களை உருவாக்கலாம். பொறுமையுடன், துணைக்கு தனிப்பட்ட இடத்தை வழங்கி உணர்வுகளை வெளிப்படுத்த அனுமதிக்கவும்.",
+          "health": "முறையற்ற உறக்கமுறை அல்லது கண் சோர்வு சக்தியை குறைக்கலாம். டிஜிட்டல் டிடாக்ஸ் செய்து, சூடான மூலிகை தேநீர் குடித்து மாலை நேரத்தில் ஓய்வெடுக்கவும்.",
+          "lucky_number": 9,
+          "lucky_color": "கிரிம்சன்",
+          "auspicious_time": "02:15 PM - 03:45 PM",
+          "remedy": "சனி கோவிலுக்கு கடுகு எண்ணெயை அர்ப்பணிக்கவும் அல்லது மாலை நேரத்தில் பீப்பல் மரத்தின் கீழ் எள்ளு எண்ணெய் விளக்கை ஏற்றவும்.",
+          "ratings": {
+            "career": 3,
+            "finance": 2,
+            "love": 3,
+            "health": 3
+          }
+        },
+        "Vrishabha": {
+          "summary": "சமூக கூட்டணிகள் மற்றும் நிதி ஆசைகள் இன்று வலுவான ஆதரவு காற்றுகளைப் பெறுகின்றன.",
+          "moon_sign_position": "11th House transit in Meena",
+          "chandra_house": 11,
+          "transit_effect": "Positive",
+          "general": "சந்திரன் உங்கள் பதினொன்றாம் வீட்டை செயல்படுத்துவதால், நெட்வொர்க் வாய்ப்புகள் மற்றும் நம்பிக்கையுடன் அதிகரிக்கின்றன. கூட்டணி முயற்சிகள் மற்றும் வழிகாட்டிகளுடன் தொடர்புகள் பயனுள்ள ஊக்கத்தை வழங்கும்.",
+          "career": "உங்கள் யோசனைகள் மூத்த மேலாண்மை மற்றும் தொழில்முறை சகாக்களால் வரவேற்கப்படும். விரிவாக்கக் கருத்துக்களை முன்வைக்கவும், வாடிக்கையாளர் உறவுகளை கட்டியெழுப்பவும் சிறந்த நாள்.",
+          "finance": "முந்தைய முதலீடுகள் அல்லது தாமதமான பெறுமதிகளிலிருந்து நிதி லாபம் மனநிலையை மேம்படுத்தும். லாபத்தின் ஒரு பகுதியை நம்பகமான நீண்டகால சேமிப்பில் ஒதுக்கவும்.",
+          "relationships": "நண்பர்கள் உங்கள் நம்பிக்கையும் மகிழ்ச்சியையும் மீட்டெடுக்க உதவுகின்றனர். காதல் துணை பரஸ்பர புரிதல் மற்றும் எதிர்கால கனவுகளைப் பகிர்ந்து கொள்ளும் சூடான தருணங்களை அனுபவிக்கிறார்.",
+          "health": "உற்சாகம் உயர்ந்துள்ளது, கனமான பணிச்சுமைகளை முடிக்க போதுமான சக்தி உள்ளது. வெளிப்புற செயல்களில் நீர்மம் சமநிலையைப் பேணவும்.",
+          "lucky_number": 6,
+          "lucky_color": "எமரால்ட் பச்சை",
+          "auspicious_time": "10:30 AM - 12:00 PM",
+          "remedy": "காலை 21 முறை சுக்ரா விதி மந்திரம் 'ஓம் த்ரம் த்ரீம் த்ரௌம் ஸஹ் ஸுக்ரயா நமஹ்' ஜபிக்கவும்.",
+          "ratings": {
+            "career": 5,
+            "finance": 5,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Mithuna": {
+          "summary": "தொழில் முன்னேற்றம் மற்றும் தொழில்முறை காட்சியமைப்பு மையமாக இருந்து, வெற்றிகரமான விளைவுகளைத் தரும்.",
+          "moon_sign_position": "10th House transit in Meena",
+          "chandra_house": 10,
+          "transit_effect": "Positive",
+          "general": "பத்தாம் வீட்டின் சந்திரன் உங்கள் தலைமைப் பங்கையும் பொது நம்பகத்தன்மையையும் உயர்த்துகிறது. இன்று காட்டும் அர்ப்பணிப்பு எதிர்கால தொழில் மைல்கற்களுக்கு வலுவான அடித்தளத்தை அமைக்கும்.",
+          "career": "சிக்கலான பணிகளில் சகாக்கள் உங்களை வழிகாட்டும். தெளிவான திட்டங்களில் முன்வந்து, உங்கள் பகுப்பாய்வு திறன் பெரிதும் பாராட்டப்படும்.",
+          "finance": "பணப்போக்கு நிலையானது, உங்கள் தொழில்முறை அர்ப்பணிப்பால் இயக்கப்படுகிறது. ஊகமான உடனடி வாங்குதல்களை தவிர்த்து, நீண்டகால சொத்து பாதுகாப்பை முன்னுரிமை கொடுக்கவும்.",
+          "relationships": "வேலைக் கடமைகள் அதிக நேரம் எடுத்துக்கொள்வதால், குடும்ப விஷயங்களுக்கு குறைந்த நேரம் கிடைக்கும். துணைக்கு சூடான செய்திகளை அனுப்பி, உணர்ச்சி தூரத்தைத் தவிர்க்கவும்.",
+          "health": "நீண்ட நேரம் மேசைச் செயல்கள் அல்லது கூட்டங்களால் உடல் நிலைமையிலான சோர்வு ஏற்படும். மென்மையான முதுகு நீட்டிப்பு மற்றும் குறுகிய நடைப்பயிற்சிகள் உடல் சமநிலையை மீட்டெடுக்க உதவும்.",
+          "lucky_number": 5,
+          "lucky_color": "வானம் நீலம்",
+          "auspicious_time": "11:45 AM - 01:15 PM",
+          "remedy": "மாடுகளுக்கு பச்சை புல் அல்லது تازா பசலைக் கீரை கொடுத்து, 'ஓம் புத்தய நமஹ்' மந்திரம் ஜபிக்கவும்.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 3,
+            "health": 4
+          }
+        },
+        "Karka": {
+          "summary": "உயர் ஞானம், அதிர்ஷ்டம் மற்றும் ஆன்மீக அமைதி உங்கள் முடிவுகளை இன்று செழிக்கச் செய்கிறது.",
+          "moon_sign_position": "9th House transit in Meena",
+          "chandra_house": 9,
+          "transit_effect": "Positive",
+          "general": "ஒன்பதாம் வீட்டின் சந்திரன் உங்கள் தத்துவ ஆர்வத்தை தூண்டி, பார்வையை விரிவாக்குகிறது. பயனுள்ள அதிர்ஷ்டம் பயணத் திட்டங்கள், ஆன்மீக விழாக்கள் மற்றும் கல்வி முயற்சிகளை ஆதரிக்கிறது.",
+          "career": "அனுபவமிக்க வழிகாட்டியின் வழிகாட்டுதல் ஒரு நிலைமையிலிருந்த திட்டத்தை தெளிவுபடுத்தும். சர்வதேச கூட்டாண்மைகள் அல்லது தொலைதொடர்பு திட்டங்கள் பயனுள்ளதாக முன்னேறும்.",
+          "finance": "அதிர்ஷ்டமான கிரக அம்சங்கள் படிப்படியாக நிதி ஒருங்கிணைப்பு மற்றும் நெறிமுறை லாபங்களை示ிக்கின்றன. கல்வி வளங்கள் அல்லது யாத்திரை பயணங்களில் முதலீடு ஆன்மீக ரீதியாக பலனளிக்கும்.",
+          "relationships": "அர்த்தமுள்ள உரையாடல்கள் குடும்ப மூத்தவர்களிடமிருந்து ஆழமான உணர்ச்சி பிணைப்பை உருவாக்கும். அவர்களின் ஆசீர்வாதங்கள் உங்கள் சந்தேகங்களை நிவர்த்தி செய்கின்றன.",
+          "health": "மன அமைதி உடல் சக்தி மற்றும் ஜீரணத்தை மேம்படுத்துகிறது. அமைதியான நேரங்களை தியானம் அல்லது இயற்கையில் செலவிடுவது உயிர்தன்மையை உயர்த்தும்.",
+          "lucky_number": 2,
+          "lucky_color": "முத்து வெள்ளை",
+          "auspicious_time": "08:00 AM - 09:30 AM",
+          "remedy": "சிவலிங்கத்திற்கு பால் (நீர் கலந்த) மற்றும் வெள்ளை மலர்களை அர்ப்பணிக்கவும்.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 5,
+            "health": 5
+          }
+        },
+        "Simha": {
+          "summary": "ஆழமான மாற்றங்களை பொறுமை, நுணுக்கம் மற்றும் உணர்ச்சி சகிப்புத்தன்மையுடன் சமாளிக்கவும்.",
+          "moon_sign_position": "8th House transit in Meena",
+          "chandra_house": 8,
+          "transit_effect": "Challenging",
+          "general": "எட்டாம் வீட்டின் பரிமாற்றம் திடீர் மாற்றங்களைத் தருகிறது; நெகிழ்வுத்தன்மை மற்றும் உள்ளார்ந்த அமைதி அவசியம். மறைந்த உண்மைகளை ஏற்றுக்கொண்டு, சந்தேகத்தின் போது உணர்ச்சி கட்டுப்பாட்டை பயிற்சி செய்யவும்.",
+          "career": "கணக்கிடாத ஆபத்துகளைத் தவிர்த்து, அதிகாரம் தொடர்பான வேலை மோதல்களில் ஈடுபடாதீர்கள். விவரமான ஆய்வு, கணக்குப் பணிகள் மற்றும் ரகசிய முரண்பாடுகளை தீர்ப்பதில் கவனம் செலுத்தவும்.",
+          "finance": "பகிரப்பட்ட வளங்கள், வரிகள் மற்றும் கூட்ட நிதி பொறுப்புகள் குறித்து எச்சரிக்கையாக இருங்கள். இன்று பணம் கடன் வழங்குதல் அல்லது உறுதியான உத்தரவாத ஆவணங்களில் கையொப்பமிடுதல் தவிர்க்கவும்.",
+          "relationships": "நுண்ணிய நம்பிக்கை பிரச்சினைகள் அல்லது சொல்லப்படாத கவலைகள் தனிப்பட்ட உறவுகளில் தோன்றலாம். உணர்ச்சி விஷயங்களை இரக்கமான நேர்மையுடன் அணுகவும், பாதுகாப்பான நிலைப்பாட்டைத் தவிர்க்கவும்.",
+          "health": "மெதுவான ஜீரணமும் திடீர் மன அழுத்தம் காரணமாக தலைவலி ஏற்படும். இலகுவான, تازா தயாரிக்கப்பட்ட உணவுகளை உட்கொள்வது அமைப்பை சமநிலைப்படுத்தும்.",
+          "lucky_number": 1,
+          "lucky_color": "செம்பு",
+          "auspicious_time": "03:30 PM - 05:00 PM",
+          "remedy": "மஹாம்ரித்யுஞ்ஜய மந்திரம் 11 முறை ஜபித்து, சூரியனுக்கு விடியற்காலை நீரை அர்ப்பணிக்கவும்.",
+          "ratings": {
+            "career": 3,
+            "finance": 2,
+            "love": 3,
+            "health": 3
+          }
+        },
+        "Kanya": {
+          "summary": "கூட்டு முயற்சிகள் கூட்டாளி இயக்கம் சமநிலையுடன் மலர்கின்றன.",
+          "moon_sign_position": "7th House transit in Meena",
+          "chandra_house": 7,
+          "transit_effect": "Positive",
+          "general": "சந்திரன் உங்கள் ஏழாம் வீட்டை ஒளிரச் செய்வதால், ஒத்துழைப்பு, பரஸ்பர மரியாதை மற்றும் சமூக தூதரியம் முக்கியமாகும். ஒற்றை முயற்சியைக் காட்டிலும் ஒப்புமை தேடுவது அதிக பயனளிக்கும்.",
+          "career": "விவாதங்கள், வாடிக்கையாளர் கூட்டங்கள் மற்றும் கூட்டுத் திட்டங்கள் ஆதரவு கிரகங்களின் கீழ் முன்னேறுகின்றன. உங்கள் கவனமான கேட்பும் நடைமுறை உள்ளீடும் மதிப்புமிக்க வணிக உறவுகளை உறுதிப்படுத்தும்.",
+          "finance": "உறவினர் அல்லது வணிக கூட்டாளிகள் செல்வம் அதிகரிப்பில் மதிப்புமிக்க யோசனைகளை வழங்குகின்றனர். நிதி விதிமுறைகள் மற்றும் கமிஷன் ஒப்பந்தங்களை எழுத்து வடிவில் தெளிவாக ஆவணப்படுத்தவும்.",
+          "relationships": "திருமண மற்றும் காதல் உறவுகள் சூடான பரஸ்பர அன்பும் அன்பும் அனுபவிக்கின்றன. ஒன்றாகக் கழிக்கும் அமைதியான மாலை உணர்ச்சி பிணைப்பை வலுப்படுத்தும்.",
+          "health": "மொத்த உற்சாகம் நல்லது, ஆனால் கீழ் முதுகு கடினம் கவனிக்கப்பட வேண்டும். முறையான இயக்கம் மற்றும் நீண்ட நேரம் கடினமான உட்கார்வை தவிர்க்கவும்.",
+          "lucky_number": 7,
+          "lucky_color": "பாஸ்டல் மஞ்சள்",
+          "auspicious_time": "01:30 PM - 03:00 PM",
+          "remedy": "முழு பச்சை முள்ளங்கடலை கோவிலுக்கு அல்லது தேவையானவருக்கு நன்கொடை அளிக்கவும்.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 5,
+            "health": 4
+          }
+        },
+        "Tula": {
+          "summary": "முறைப்படுத்தப்பட்ட ஒழுங்கு தடைகளை கடந்து உற்பத்தி வெற்றிகளை அடைய உதவும்.",
+          "moon_sign_position": "6th House transit in Meena",
+          "chandra_house": 6,
+          "transit_effect": "Positive",
+          "general": "ஆறாம் வீட்டின் பரிமாற்றம் நிலுவை மோதல்களை தீர்த்து, தினசரி பழக்கங்களை ஒழுங்குபடுத்த உதவுகிறது. உறுதியும் கட்டமைப்பு முயற்சியும் சவால்களை தெளிவான வெற்றியாக மாற்றும்.",
+          "career": "கடினமான தொழில்நுட்ப பணிகளை கையாளும் உங்கள் திறன் சகாக்களால் பாராட்டப்படுகிறது. போட்டியாளர்கள் அல்லது எதிர்மறை சகாக்கள் உங்கள் நம்பகமான பதிவைத் தகர்க்க முடியாது.",
+          "finance": "கடன் குறைப்பு, நிலுவை பில் செலுத்தல் மற்றும் வீணான செலவுகளை குறைப்பதில் கவனம் செலுத்தவும். இன்று பயன்படுத்தும் நிதி கட்டுப்பாடு எதிர்கால அமைதியை பாதுகாக்கும்.",
+          "relationships": "குடும்ப உறுப்பினர்கள் அல்லது காதல் துணைக்கு கடுமையான விமர்சனங்களைத் தவிர்க்கவும். இரக்கம் மற்றும் பகிரப்பட்ட வீட்டு பொறுப்புகள் குடும்ப ஒற்றுமையை வளர்க்கும்.",
+          "health": "காலநிலை அமிலம் அல்லது மெதுவான ஜீரணத்தைத் தடுக்கும் கடுமையான உணவு ஒழுங்கை பேணவும். இலகுவான கார்டியோ அல்லது யோகா உடல்நலத்தை மேம்படுத்தும்.",
+          "lucky_number": 4,
+          "lucky_color": "ராயல் நீலம்",
+          "auspicious_time": "09:00 AM - 10:30 AM",
+          "remedy": "ஹனுமான் சலீசா ஜபித்து, வறுத்த கடலை அல்லது வெல்லை தேவையற்றவர்களுக்கு பகிரவும்.",
+          "ratings": {
+            "career": 4,
+            "finance": 3,
+            "love": 3,
+            "health": 4
+          }
+        },
+        "Vrischika": {
+          "summary": "உணர்ச்சி அறிவும் கலை முயற்சிகளும் தனிப்பட்ட முன்னேற்றத்தைத் தருகின்றன.",
+          "moon_sign_position": "5th House transit in Meena",
+          "chandra_house": 5,
+          "transit_effect": "Positive",
+          "general": "பஞ்சாம் வீட்டில் சந்திரன் பயணிக்கும் போது, படைப்பாற்றல் அறிவும் ஆன்மீக பாசமும் மலர்கின்றன. உங்கள் உள்ளுணர்வு கூர்மையாக இருக்கும்; கற்றல் மற்றும் கலை வெளிப்பாட்டுக்கு இது சிறந்த நாள்.",
+          "career": "நீண்டகால சிக்கலான பிரச்சினைகளுக்கு புதுமையான தீர்வுகள் இன்றே தோன்றும். ஆராய்ச்சி, படைப்பாற்றல் வடிவமைப்பு அல்லது கல்வி துறையில் பணிபுரியும்வர்கள் குறிப்பிடத்தக்க அங்கீகாரத்தைப் பெறுவர்.",
+          "finance": "தகவலான பகுப்பாய்வு திட்டமிடலால் லாபம் கிடைக்கும்; குறுகிய கால சூதாட்டம் தவிர்க்கவும். திறன் மேம்பாட்டில் மிதமான முதலீடுகள் பயனளிக்கும்.",
+          "relationships": "காதல் இதயப்பூர்வமான வெளிப்பாடுகள் மற்றும் விளையாட்டுத்தனமான மகிழ்ச்சியுடன் மலர்கிறது. குழந்தைகளுடன் அர்த்தமுள்ள தொடர்புகள் ஆழமான வெப்பம் மற்றும் பெருமையை தரும்.",
+          "health": "ஆற்றல் நிலை நிலையானது, ஆனால் மன உற்சாகம் அதிகமாக இருப்பதால் மனம் அதிகமாக செயல்படும். தூங்குவதற்கு முன் ஆழ்ந்த மூச்சு (ப்ராணாயாம) பயிற்சி செய்யவும்.",
+          "lucky_number": 3,
+          "lucky_color": "மஞ்சள்",
+          "auspicious_time": "04:00 PM - 05:30 PM",
+          "remedy": "காலை பிரார்த்தனைக்கு பிறகு சுண்ணாம்பு அல்லது மஞ்சள் பேஸ்ட் சிறிய திலாக் தலை மீது போடவும்.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 5,
+            "health": 4
+          }
+        },
+        "Dhanu": {
+          "summary": "இன்றைய நாள் வீட்டின் அமைதி, உணர்ச்சி நிலை மற்றும் குடும்ப நலனை முன்னுரிமை கொடுக்க வேண்டும்.",
+          "moon_sign_position": "4th House transit in Meena",
+          "chandra_house": 4,
+          "transit_effect": "Neutral",
+          "general": "நான்காம் வீட்டின் பரிமாற்றம் உங்களை வீட்டிற்கும் குடும்பத்திற்கும் உள்ளார்ந்த சமநிலைக்கு திருப்புகிறது. அமைதியான வாழும் சூழல் உங்கள் மன சக்தியை மீட்டெடுக்கும்.",
+          "career": "வேலைப் பணிகளை நிலையான வேகத்தில் முன்னெடுத்து, அதிக ஆற்றலை செலவிடாமல் இருங்கள். தொலைதூர வேலை அல்லது வீட்டில் திட்டமிடல் அமர்வுகள் பயனளிக்கும்.",
+          "finance": "வீட்டு பராமரிப்பு, சொத்து அல்லது வசதிகளுக்கான செலவுகள் அதிகம் இருக்கலாம். வாங்குதல்கள் உண்மையான தேவையை அடிப்படையாகக் கொண்டிருக்க வேண்டும், உணர்ச்சி அடிப்படையிலானதல்ல.",
+          "relationships": "தாய்மாதரையுடன் அர்த்தமுள்ள உரையாடல்கள் உணர்ச்சி ஆறுதலை வழங்கும். ஆலோசனை வழங்குவதற்கு முன் குடும்ப உறுப்பினர்களை கவனமாகக் கேளுங்கள்.",
+          "health": "மூக்கு அடைப்பு அல்லது மென்மையான சோர்வு சூடான பானங்கள் மற்றும் போதிய ஓய்வு தேவைப்படலாம். கனமான, எண்ணெய் நிறைந்த இரவு உணவுகளைத் தவிர்க்கவும்.",
+          "lucky_number": 8,
+          "lucky_color": "தங்க மஞ்சள்",
+          "auspicious_time": "07:30 AM - 09:00 AM",
+          "remedy": "துளசி செடியை நீர்ப்பாசனம் செய்து, மாலை நேரத்தில் மண் நெய் விளக்கை அருகில் ஏற்றவும்.",
+          "ratings": {
+            "career": 3,
+            "finance": 3,
+            "love": 4,
+            "health": 3
+          }
+        },
+        "Makara": {
+          "summary": "துணிச்சலான தொடர்பும் உற்சாகமான முயற்சிகளும் புதிய வளர்ச்சி பாதைகளைத் திறக்கின்றன.",
+          "moon_sign_position": "3rd House transit in Meena",
+          "chandra_house": 3,
+          "transit_effect": "Positive",
+          "general": "மூன்றாம் வீட்டை செயல்படுத்தும் சந்திரன் உங்கள் துணிச்சல், தொடர்பு திறன் மற்றும் தீர்மானத்தை உயர்த்துகிறது. குறுகிய பயணங்கள் மற்றும் கூட்டணி கூட்டங்கள் பயனுள்ள முடிவுகளைத் தரும்.",
+          "career": "உங்கள் செயற்பாட்டை முன்னெடுத்தல் நிலுவை ஒப்பந்தங்களை முடிக்கவும், இளைய சகாக்களை ஊக்குவிக்கவும் உதவுகிறது. பிரசண்டேஷன்கள் மற்றும் மூலோபாய விவாதங்களில் உங்கள் கருத்துகளை தெளிவாக வெளிப்படுத்துங்கள்.",
+          "finance": "மார்க்கெட்டிங், விற்பனை அல்லது சுயதொழில் முயற்சிகளில் முதலீடு செய்யும் முயற்சிகள் நல்ல வருவாயைத் தரும். புத்திசாலித்தனமான திட்டமிடல் நிலையான நிதி காப்பை உறுதிப்படுத்தும்.",
+          "relationships": "சகோதரர்கள் மற்றும் அயலவர்கள் உடன் சூடான பந்தங்கள் மகிழ்ச்சியையும் ஆதரவும் தருகின்றன. உங்கள் பாராட்டைத் திறந்தவெளியாக வெளிப்படுத்தி, பரஸ்பர நம்பிக்கையை ஆழப்படுத்துங்கள்.",
+          "health": "உற்சாகம் வலுவாக உள்ளது, கடினமான பணிகளை எளிதாகச் செய்ய உதவுகிறது. அதிகமாக பேசும் போது தொண்டை மற்றும் குரல் தண்டு ஓய்வை பெறும் வகையில் கவனம் செலுத்துங்கள்.",
+          "lucky_number": 5,
+          "lucky_color": "நேவி நீலம்",
+          "auspicious_time": "02:00 PM - 03:30 PM",
+          "remedy": "சனி மந்திரம் 'ஓம் ஷம் ஷநைஷ்சரயா நமஹ்' 108 முறை ஜபிக்கவும்.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 4,
+            "health": 5
+          }
+        },
+        "Kumbha": {
+          "summary": "நிதி ஒருங்கிணைப்பு மற்றும் சிந்தனையுள்ள பேச்சு குடும்ப ஒற்றுமை மற்றும் பாதுகாப்பை வளர்க்கும்.",
+          "moon_sign_position": "2nd House transit in Meena",
+          "chandra_house": 2,
+          "transit_effect": "Positive",
+          "general": "இரண்டாம் வீட்டின் சந்திரன் நிதி கவனத்தையும் குடும்ப மதிப்புகளையும் இனிய தொடர்பையும் வலியுறுத்துகிறது. இன்று எடுக்கப்படும் நிலையான முடிவுகள் நீண்டகால பாதுகாப்பையும் குடும்ப ஒற்றுமையையும் வலுப்படுத்தும்.",
+          "career": "உங்கள் தூய்மையான பேச்சு குழு முரண்பாடுகளை தீர்த்து, அணிகளின் ஒத்துழைப்பை உருவாக்கும். புதிய திட்டங்களைத் தொடங்காமல், நடந்து கொண்டிருக்கும் திட்டங்களை ஒருங்கிணைக்க கவனம் செலுத்துங்கள்.",
+          "finance": "நிதி வருவாய் நம்பகமானது, பாரம்பரிய குடும்ப முதலீடுகளில் லாபம் கிடைக்கும். ஒழுங்கான சேமிப்பு அணுகுமுறை தேவையற்ற செலவுகளை கட்டுப்படுத்தும்.",
+          "relationships": "குடும்பக் கூட்டங்கள் மற்றும் இதயப்பூர்வமான உரையாடல்கள் அமைதியான வீட்டு சூழலை உருவாக்கும். உங்கள் அமைதியான அணுகுமுறை சிறிய கவலைகளை எதிர்கொள்ளும் துணைவர்களையும் உறவினர்களையும் நிம்மதியாக்கும்.",
+          "health": "தொண்டை மற்றும் வாயின் சுகாதாரத்தை கவனித்து, அதிகமாக குளிர்ந்த பானங்களைத் தவிர்க்கவும். சூடான, ஊட்டச்சத்து சுவை கொண்ட சூப் உட்கொண்டு ஜீரணத்தை ஆதரிக்கவும்.",
+          "lucky_number": 8,
+          "lucky_color": "ஊதா",
+          "auspicious_time": "12:15 PM - 01:45 PM",
+          "remedy": "கருப்பு நாய்களுக்கு ரொட்டி அல்லது பிஸ்கட் கொடுத்து, மூத்த வழிகாட்டிகளுக்கு மரியாதை காட்டவும்.",
+          "ratings": {
+            "career": 4,
+            "finance": 5,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Meena": {
+          "summary": "தனிப்பட்ட தெளிவு, உணர்ச்சி புதுப்பிப்பு மற்றும் சுயநம்பிக்கை இந்த சக்திவாய்ந்த நாளை வரையறுக்கின்றன.",
+          "moon_sign_position": "1st House transit in Meena",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "சந்திரன் உங்கள் லாக்னா ராசியில் பயணிக்கும் போது, உங்கள் உள்ளுணர்வு மற்றும் தனிப்பட்ட காந்தம் அதிகரிக்கிறது. உள் திசையை நம்பி, சுய மேம்பாட்டை நோக்கி நோக்குங்கள்.",
+          "career": "முன்னணி பண்புகள் வெளிப்பட்டு, திட்டங்களை அமைதியாகவும் கருணையுடனும் முன்னெடுக்க உதவுகின்றன. மேலாளர்கள் மற்றும் வாடிக்கையாளர்கள் உங்கள் விவரமான பங்களிப்பை மதிப்பிடுகின்றனர்.",
+          "finance": "நிதி வாய்ப்புகள் நிலையானவை, எதிர்கால மூலதன ஒதுக்கீடுகளை கவனமாக மதிப்பிட ஊக்குவிக்கின்றன. அறியாத ஊகமான பாதைகளில் நுழைய முன் நிபுணர் ஆலோசனை பெறுங்கள்.",
+          "relationships": "உங்கள் சூடு மற்றும் உணர்ச்சி ஈர்ப்பு அன்பானவர்களிடமிருந்து உண்மையான அன்பை ஈர்க்கும். தெளிவான, அன்பான தொடர்பு காதல் பிணைப்பை பெரிதும் வலுப்படுத்தும்.",
+          "health": "உடல் மற்றும் மன சமநிலை உயர்ந்துள்ளது, புதிய உற்சாகம் மற்றும் கவனம் வழங்குகிறது. போதிய நீர்ப்பானம் மற்றும் ஒழுங்கான உறக்கத்தை பேணி, உச்ச ஆரோக்கியத்தை நிலைநிறுத்துங்கள்.",
+          "lucky_number": 3,
+          "lucky_color": "கடல் பச்சை",
+          "auspicious_time": "10:00 AM - 11:30 AM",
+          "remedy": "மணமகிழ் சுண்ணாம்பு திலாக் போட்டு, விஷ்ணு சகஸ்ரநாமம் அல்லது 'ஓம் நமோ பகவதே வசுதேவயா' ஜபிக்கவும்.",
           "ratings": {
             "career": 5,
             "finance": 4,
