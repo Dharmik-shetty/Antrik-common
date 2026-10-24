@@ -1,314 +1,17 @@
 {
   "metadata": {
-    "generated_at": "2026-10-23T15:29:39.199852+05:30",
+    "generated_at": "2026-10-24T15:00:47.269248+05:30",
     "language_code": "en",
     "language_name": "English",
     "timezone": "Asia/Kolkata",
     "reference_standard": "New Delhi / Central India (IST)",
     "ayanamsha": "Lahiri / Chitrapaksha",
     "coverage": {
-      "start_date": "2026-10-23",
-      "end_date": "2026-10-24"
+      "start_date": "2026-10-24",
+      "end_date": "2026-10-25"
     }
   },
   "days": {
-    "2026-10-23": {
-      "date": "2026-10-23",
-      "day_of_week": "Friday",
-      "day_of_week_sanskrit": "Shukravara",
-      "panchang": {
-        "tithi": {
-          "name": "Shukla Trayodashi",
-          "paksha": "Shukla",
-          "description": "Auspicious tithi dedicated to Lord Shiva; ideal for spiritual austerities, resolving debts, and seeking divine grace."
-        },
-        "nakshatra": {
-          "name": "Uttara Bhadrapada",
-          "ruler": "Shani (Saturn)",
-          "pada": 2,
-          "deity": "Ahirbudhnya"
-        },
-        "yoga": {
-          "name": "Harshana",
-          "nature": "Benefic"
-        },
-        "karana": {
-          "name": "Taitila",
-          "nature": "Benefic"
-        },
-        "calendar": {
-          "vikram_samvat": 2083,
-          "shaka_samvat": 1948,
-          "amanta_month": "Ashwina",
-          "purnimanta_month": "Ashwina",
-          "ayana": "Dakshinayana",
-          "ritu": "Sharad (Autumn)"
-        },
-        "timings_ist": {
-          "sunrise": "06:27 AM",
-          "sunset": "05:43 PM",
-          "rahu_kaal": "10:41 AM - 12:05 PM",
-          "abhijit_muhurat": "11:43 AM - 12:28 PM",
-          "brahma_muhurta": "04:45 AM - 05:36 AM"
-        },
-        "moon_sign_today": "Meena (Pisces)",
-        "festival_or_vrat": "Shukra Pradosh Vrat"
-      },
-      "rashifal": {
-        "Mesha": {
-          "summary": "Conserve your energy and manage foreign or long-term aspirations with calculated patience.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 12,
-          "transit_effect": "Neutral",
-          "general": "A reflective day urges you to slow down and reorganize your thoughts. Steer clear of uncalculated haste in personal affairs.",
-          "career": "Collaborations involving overseas clients or remote tasks bring subtle progress. Maintain thorough documentation to prevent oversight.",
-          "finance": "Watch out for impulsive expenditures on luxuries or unplanned travel. Prioritize clearing pending bills or consolidating debts.",
-          "relationships": "Gentle communication heals recent misunderstandings with your partner. Give your loved ones quiet emotional support rather than quick solutions.",
-          "health": "Prioritize quality sleep to combat mental fatigue. Light evening walking or meditation will soothe restlessness.",
-          "lucky_number": 9,
-          "lucky_color": "Coral Red",
-          "auspicious_time": "02:15 PM - 03:45 PM",
-          "remedy": "Offer water mixed with a pinch of red sandalwood to Surya in the morning.",
-          "ratings": {
-            "career": 3,
-            "finance": 3,
-            "love": 4,
-            "health": 3
-          }
-        },
-        "Vrishabha": {
-          "summary": "Expansive gains and encouraging support from professional allies brighten your day.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 11,
-          "transit_effect": "Positive",
-          "general": "The cosmic flow activates your sector of ambition, granting rewarding outcomes. Your innate persistence earns admiration across social circles.",
-          "career": "Networking opens promising doors for strategic collaborations. Senior colleagues and mentors willingly endorse your recent initiatives.",
-          "finance": "Multiple avenues for financial inflows show promising stability. A well-considered past investment yields positive dividends.",
-          "relationships": "Friendships bring uplifting conversations and joy. Couples will experience harmonious alignment regarding shared future aspirations.",
-          "health": "Vitality remains elevated throughout the day. Continue mindful dietary routines to sustain your high energy.",
-          "lucky_number": 6,
-          "lucky_color": "Pastel Pink",
-          "auspicious_time": "09:15 AM - 10:30 AM",
-          "remedy": "Chant the Shukra Beej Mantra 'Om Draam Dreem Droum Sah Shukraya Namah' 11 times.",
-          "ratings": {
-            "career": 5,
-            "finance": 5,
-            "love": 4,
-            "health": 4
-          }
-        },
-        "Mithuna": {
-          "summary": "Professional accomplishments take center stage as your strategic vision gets recognized.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 10,
-          "transit_effect": "Positive",
-          "general": "A productive rhythm assists you in accomplishing demanding organizational targets. Public standing and authoritative respect rise steadily.",
-          "career": "Presentations and negotiations yield fruitful results under your sharp intellect. Authority figures will appreciate your pragmatic problem-solving style.",
-          "finance": "Professional endeavors pave the way for steady commercial rewards. Restrain speculative spending and focus on reinvesting in your trade.",
-          "relationships": "Balancing long working hours with family expectations will require conscious tact. A short evening interaction brings heartwarming comfort.",
-          "health": "Avoid posture-related strain by taking intermittent ergonomic breaks. Stay well-hydrated during peak work hours.",
-          "lucky_number": 5,
-          "lucky_color": "Emerald Green",
-          "auspicious_time": "11:30 AM - 01:00 PM",
-          "remedy": "Offer green grass or fresh spinach to a cow.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 3,
-            "health": 4
-          }
-        },
-        "Karka": {
-          "summary": "Grace, fortune, and insightful wisdom pave the way for expansive horizons.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 9,
-          "transit_effect": "Positive",
-          "general": "A spiritual and philosophical alignment fosters profound mental peace. Higher learning and intellectual pursuits unfold smoothly today.",
-          "career": "Long-distance contacts and academic projects flourish remarkably. Trust your intuitive guidance when formulating forward-looking plans.",
-          "finance": "Financial prospects improve through ethical and structured efforts. Good fortune aids in resolving a stalled transaction.",
-          "relationships": "Mutual respect and philosophical harmony enrich marital life. A candid conversation with a mentor or elder provides deep reassurance.",
-          "health": "Mental tranquility reflects positively on your physical stamina. A calm yoga session will enhance overall well-being.",
-          "lucky_number": 2,
-          "lucky_color": "Pearl White",
-          "auspicious_time": "07:30 AM - 09:00 AM",
-          "remedy": "Apply a chandan (sandalwood) tilak on your forehead after your morning prayer.",
-          "ratings": {
-            "career": 4,
-            "finance": 4,
-            "love": 5,
-            "health": 5
-          }
-        },
-        "Simha": {
-          "summary": "Introspective depth and patient discernment turn hidden complexities into valuable strengths.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 8,
-          "transit_effect": "Challenging",
-          "general": "Navigate through sudden shifts by remaining emotionally anchored and unperturbed. Unraveling underlying motives helps you maintain a decisive edge.",
-          "career": "Focus on research, audit, and refining operational details rather than starting fresh ventures. Maintain strict confidentiality regarding unfinished projects.",
-          "finance": "Avoid hasty joint financial commitments or risky speculative trading. Review insurance, taxes, and shared assets with precision.",
-          "relationships": "Clear, honest conversations prevent unwarranted suspicions in partnerships. Offer empathy to your partner’s unspoken vulnerabilities.",
-          "health": "Watch out for digestive sensitivity or fatigue due to overthinking. Prefer light, freshly cooked meals over rich foods.",
-          "lucky_number": 1,
-          "lucky_color": "Golden Yellow",
-          "auspicious_time": "03:30 PM - 05:00 PM",
-          "remedy": "Chant the Mahamrityunjaya Mantra 11 times for inner strength and protection.",
-          "ratings": {
-            "career": 3,
-            "finance": 3,
-            "love": 3,
-            "health": 3
-          }
-        },
-        "Kanya": {
-          "summary": "Diplomacy and balanced collaboration create successful outcomes in shared ventures.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 7,
-          "transit_effect": "Positive",
-          "general": "Harmonious synergy marks your interpersonal encounters today. Your practical mediation resolves conflicts with graceful ease.",
-          "career": "Commercial partnerships and contract negotiations progress favorably. Your collaborative demeanor wins client confidence effortlessly.",
-          "finance": "Joint financial strategies and contractual agreements demonstrate steady growth. Avoid unilateral financial choices without consulting partners.",
-          "relationships": "Spousal affection deepens as you share mutual goals openly. Singles may encounter someone with shared values and genuine intent.",
-          "health": "Keep your hydration levels high to support renal and lower back vitality. Mild stretching exercises will alleviate stiffness.",
-          "lucky_number": 5,
-          "lucky_color": "Sky Blue",
-          "auspicious_time": "01:15 PM - 02:45 PM",
-          "remedy": "Offer white fragrant flowers or mishri at a temple.",
-          "ratings": {
-            "career": 4,
-            "finance": 4,
-            "love": 5,
-            "health": 4
-          }
-        },
-        "Tula": {
-          "summary": "Methodical diligence helps you dismantle roadblocks and secure clear operational wins.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 6,
-          "transit_effect": "Positive",
-          "general": "A resilient mindset equips you to manage competitive pressures effortlessly. Focus on systematic organization to simplify your schedule.",
-          "career": "Your efficiency outshines workplace rivals and handles complex tasks cleanly. Legal, administrative, or compliance matters tilt in your favor.",
-          "finance": "Debt repayment strategies or fiscal disputes find practical solutions. Strictly curb impulsive spending on non-essential lifestyle upgrades.",
-          "relationships": "Small acts of service speak louder than grand gestures today. Avoid turning trivial domestic debates into prolonged arguments.",
-          "health": "Focus on gut health and refrain from excessively spicy foods. Consistent morning workouts will strengthen your stamina.",
-          "lucky_number": 7,
-          "lucky_color": "Ivory",
-          "auspicious_time": "08:30 AM - 10:00 AM",
-          "remedy": "Feed soaked lentils or grains to birds before noon.",
-          "ratings": {
-            "career": 4,
-            "finance": 4,
-            "love": 3,
-            "health": 4
-          }
-        },
-        "Vrischika": {
-          "summary": "Creative intuition sparkles, bringing intellectual clarity and romantic warmth.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 5,
-          "transit_effect": "Positive",
-          "general": "Your imaginative faculties and analytical depth operate in sublime harmony today. Express your distinctive viewpoints with poised self-assurance.",
-          "career": "Innovations in design, advisory roles, and analytical tasks earn high acclaim. Students and creators will experience remarkable focus and output.",
-          "finance": "Prudent financial planning yields satisfaction, but avoid rash speculative bets. A creative hobby has the potential to become a viable income source.",
-          "relationships": "Warmth, romance, and joyful interactions revitalize your emotional life. Spending quality moments with children brings deep fulfillment.",
-          "health": "Vitality is vibrant and mental spirit remains cheerful. Engage in creative pursuits to release residual tension.",
-          "lucky_number": 9,
-          "lucky_color": "Maroon",
-          "auspicious_time": "12:15 PM - 01:45 PM",
-          "remedy": "Recite the Gayatri Mantra 9 times facing East in the morning.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 5,
-            "health": 4
-          }
-        },
-        "Dhanu": {
-          "summary": "Domestic tranquility and inner balance provide a strong anchor for constructive action.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 4,
-          "transit_effect": "Neutral",
-          "general": "Cultivate serenity at home to replenish your dynamic spirit. Matters concerning property, vehicles, or home enhancements move forward smoothly.",
-          "career": "Working from a comfortable environment elevates your output and strategic clarity. Balance immediate professional demands with domestic duties.",
-          "finance": "Expenditure toward family comfort or household improvements proves worthwhile. Avoid speculative property commitments without thorough legal scrutiny.",
-          "relationships": "Warm bonds with your mother or maternal elders bring comfort and blessings. Open heart-to-heart dialogues dissolve domestic friction.",
-          "health": "Pay attention to respiratory wellness and avoid excessively cold drinks. Pranayama practice will restore emotional and physical balance.",
-          "lucky_number": 3,
-          "lucky_color": "Saffron",
-          "auspicious_time": "04:00 PM - 05:30 PM",
-          "remedy": "Offer yellow flowers or haldi-mixed milk to Lord Vishnu.",
-          "ratings": {
-            "career": 4,
-            "finance": 3,
-            "love": 4,
-            "health": 3
-          }
-        },
-        "Makara": {
-          "summary": "Courageous enterprise and persuasive expression unlock exciting new horizons.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 3,
-          "transit_effect": "Positive",
-          "general": "Your resolve is steadfast, empowering you to undertake bold initiatives. Short commutes and collaborative communications prove remarkably fruitful.",
-          "career": "Marketing, media, and transactional negotiations deliver tangible progress. Colleagues readily rally behind your proactive leadership.",
-          "finance": "Moderate yet steady monetary gains arise from commercial drives. Maintain control over incidental expenses during travel.",
-          "relationships": "Siblings and close neighbors offer heartfelt assistance and camaraderie. Sincere, encouraging dialogue strengthens romantic connections.",
-          "health": "Energy levels remain robust and sustained throughout the day. Shoulder or neck exercises will relieve minor tension.",
-          "lucky_number": 8,
-          "lucky_color": "Charcoal Grey",
-          "auspicious_time": "09:45 AM - 11:15 AM",
-          "remedy": "Light a mustard oil lamp near a Peepal tree in the evening.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 4,
-            "health": 4
-          }
-        },
-        "Kumbha": {
-          "summary": "Financial stability strengthens through disciplined management and articulate communication.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 2,
-          "transit_effect": "Positive",
-          "general": "Your pleasant speech and grounded demeanor resolve complex discussions favorably. Family wealth and accumulated assets take precedence today.",
-          "career": "Your valuable verbal input in executive meetings enhances your credibility. Banking, consulting, and advisory tasks yield productive results.",
-          "finance": "Savings get a welcome boost through smart budgeting and timely inflows. An unexpected financial recovery or incentive may brighten your day.",
-          "relationships": "Family bonding is joyful and mutually supportive over meals. Communicate kindly to ensure your partner feels cherished and valued.",
-          "health": "Focus on dental and throat hygiene; avoid excessively oily snacks. Gentle vocal and breathing exercises will prove therapeutic.",
-          "lucky_number": 4,
-          "lucky_color": "Navy Blue",
-          "auspicious_time": "02:00 PM - 03:30 PM",
-          "remedy": "Donate white grains or rice to someone in need.",
-          "ratings": {
-            "career": 4,
-            "finance": 5,
-            "love": 4,
-            "health": 4
-          }
-        },
-        "Meena": {
-          "summary": "Personal radiance and mental clarity place you in an advantageous, empowering position.",
-          "moon_sign_position": "Meena",
-          "chandra_house": 1,
-          "transit_effect": "Positive",
-          "general": "With the Moon illuminating your ascendant, your charm and empathetic instincts soar. Trust your authentic self to leave an indelible impression.",
-          "career": "Take command of essential projects, as your creative leadership is readily recognized. Key decision-makers look favorably upon your visionary proposals.",
-          "finance": "Monetary equilibrium remains solid; focus on self-development investments. Plan budgets methodically to ensure continuous long-range security.",
-          "relationships": "Your warmth draws people closer, creating deeply fulfilling romantic moments. Express your inner feelings with honesty and graceful humility.",
-          "health": "High mental vitality boosts physical well-being. A peaceful meditation session in the evening enhances spiritual peace.",
-          "lucky_number": 3,
-          "lucky_color": "Golden Ochre",
-          "auspicious_time": "10:15 AM - 11:45 AM",
-          "remedy": "Chant the Shiva Panchakshara Stotra or 'Om Namah Shivaya' during Pradosha kaal.",
-          "ratings": {
-            "career": 5,
-            "finance": 4,
-            "love": 5,
-            "health": 5
-          }
-        }
-      }
-    },
     "2026-10-24": {
       "date": "2026-10-24",
       "day_of_week": "Saturday",
@@ -602,6 +305,303 @@
             "finance": 4,
             "love": 5,
             "health": 5
+          }
+        }
+      }
+    },
+    "2026-10-25": {
+      "date": "2026-10-25",
+      "day_of_week": "Sunday",
+      "day_of_week_sanskrit": "Ravivara",
+      "panchang": {
+        "tithi": {
+          "name": "Purnima",
+          "paksha": "Shukla",
+          "description": "Sharad Purnima, celebrated for the nectar-showering rays of the Moon, promoting vitality, peace, and spiritual illumination."
+        },
+        "nakshatra": {
+          "name": "Ashwini",
+          "ruler": "Ketu",
+          "pada": 4,
+          "deity": "Ashwini Kumaras"
+        },
+        "yoga": {
+          "name": "Vajra",
+          "nature": "Benefic"
+        },
+        "karana": {
+          "name": "Bava",
+          "nature": "Benefic"
+        },
+        "calendar": {
+          "vikram_samvat": 2083,
+          "shaka_samvat": 1948,
+          "amanta_month": "Ashvina",
+          "purnimanta_month": "Ashvina",
+          "ayana": "Dakshinayana",
+          "ritu": "Sharad"
+        },
+        "timings_ist": {
+          "sunrise": "06:28 AM",
+          "sunset": "05:42 PM",
+          "rahu_kaal": "04:18 PM to 05:42 PM",
+          "abhijit_muhurat": "11:43 AM to 12:28 PM",
+          "brahma_muhurta": "04:52 AM to 05:40 AM"
+        },
+        "moon_sign_today": "Mesha",
+        "festival_or_vrat": "Sharad Purnima (Kojagiri Purnima / Maharishi Valmiki Jayanti)"
+      },
+      "rashifal": {
+        "Mesha": {
+          "summary": "The Moon residing in your sign brings clarity, renewed vigor, and magnetic personal appeal.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 1,
+          "transit_effect": "Positive",
+          "general": "Your natural leadership qualities take center stage today. Trust your intuition when resolving long-standing personal matters.",
+          "career": "Collaborative endeavors yield fruitful results as colleagues willingly rally behind your vision. Keep your communications crisp and transparent.",
+          "finance": "Favorable planetary currents support thoughtful self-investments and long-term planning. Avoid impulsive festive splurges.",
+          "relationships": "Your warmth and attentiveness will melt away recent misunderstandings with loved ones. An evening walk or quiet conversation deepens bonds.",
+          "health": "High energy levels sustain you throughout the day. Channel restlessness through calming pranayama or light stretching.",
+          "lucky_number": 9,
+          "lucky_color": "Crimson Red",
+          "auspicious_time": "09:30 AM - 11:00 AM",
+          "remedy": "Offer arghya (water) mixed with red sandalwood and raw milk to the Full Moon tonight.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 5,
+            "health": 4
+          }
+        },
+        "Vrishabha": {
+          "summary": "A restful day centered on introspection, spiritual restoration, and mindful expenditure.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 12,
+          "transit_effect": "Challenging",
+          "general": "The 12th house Moon prompts you to step back from the hustle and seek solace. A quiet day spent recalibrating your priorities will serve you best.",
+          "career": "Avoid initiating high-stakes professional showdowns today. Work quietly behind the scenes to streamline unfinished paperwork.",
+          "finance": "Unexpected philanthropic or household expenses could arise. Maintain a balanced budget to keep peace of mind intact.",
+          "relationships": "Give partners and family members ample breathing room today. Compassionate silence will heal friction far better than debates.",
+          "health": "Prioritize quality sleep and limit screen exposure before bedtime. Soothing chamomile tea or warm milk will induce deep rest.",
+          "lucky_number": 6,
+          "lucky_color": "Lotus Pink",
+          "auspicious_time": "02:15 PM - 03:45 PM",
+          "remedy": "Light a pure cow ghee lamp under a Tulsi plant in the evening.",
+          "ratings": {
+            "career": 3,
+            "finance": 3,
+            "love": 3,
+            "health": 3
+          }
+        },
+        "Mithuna": {
+          "summary": "Vibrant social connections and unexpected gains highlight a very rewarding Sunday.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 11,
+          "transit_effect": "Positive",
+          "general": "The Moon activating your 11th house brings celebration, uplifting camaraderie, and hopeful aspirations. Networking today opens promising doors for the coming week.",
+          "career": "Team brainstorming leads to innovative breakthroughs that impress senior peers. Your intellectual agility is at its peak.",
+          "finance": "Past investments or freelance projects may yield delightful returns today. Financial optimism is justified, but maintain disciplined saving habits.",
+          "relationships": "Gatherings with close friends and elder siblings bring joy and mutual validation. Romantic conversations are lighthearted and sincere.",
+          "health": "Vitality is robust and spirits are high. Nourish your body with wholesome, freshly prepared autumnal meals.",
+          "lucky_number": 5,
+          "lucky_color": "Emerald Green",
+          "auspicious_time": "11:15 AM - 12:45 PM",
+          "remedy": "Chant the Vishnu Sahasranama or recite 'Om Namo Bhagavate Vasudevaya' 108 times.",
+          "ratings": {
+            "career": 5,
+            "finance": 5,
+            "love": 4,
+            "health": 5
+          }
+        },
+        "Karka": {
+          "summary": "Professional prestige and family honor receive a profound cosmic uplift today.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 10,
+          "transit_effect": "Positive",
+          "general": "With your sign lord transiting the 10th house, your actions reflect dignity, competence, and clarity. Step forward confidently into any leadership duties.",
+          "career": "Supervisors and mentors notice your dedication and conscientious approach. Organizing your strategy today sets a successful tone for upcoming projects.",
+          "finance": "Stability prevails in your economic sphere, enabling long-range security planning. Favorable for decisions regarding real estate or business capital.",
+          "relationships": "Balancing professional thoughts with family time will win heartfelt appreciation at home. An elder’s blessings will bring mental peace.",
+          "health": "Watch your posture and take short breaks if working on digital devices. Physical stamina remains steady.",
+          "lucky_number": 2,
+          "lucky_color": "Pearl White",
+          "auspicious_time": "10:00 AM - 11:30 AM",
+          "remedy": "Prepare kheer (rice pudding), expose it to the Full Moon rays, and share it as Prasad.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Simha": {
+          "summary": "Fortunate planetary alignments awaken optimism, philosophical depth, and serendipity.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 9,
+          "transit_effect": "Positive",
+          "general": "The Moon moving through your 9th house expands your horizons and brings auspicious fortune. A visit to a sacred space or engaging in sacred study is highly favored.",
+          "career": "Mentorship, publishing, and creative collaborations receive powerful cosmic backing. Ideas conceived today carry significant long-range potential.",
+          "finance": "Favorable indications for investments connected with higher education, long-distance trade, or family trust funds. Spend wisely on worthy causes.",
+          "relationships": "Mutual respect and uplifting dialogue strengthen your connection with your spouse. Long-distance relatives may bring heartwarming tidings.",
+          "health": "Outdoor walks in fresh morning air will revitalize both mind and body. Guard against digestive heaviness from rich foods.",
+          "lucky_number": 1,
+          "lucky_color": "Golden Yellow",
+          "auspicious_time": "08:15 AM - 09:45 AM",
+          "remedy": "Offer water mixed with jaggery and kumkum to Surya Dev during the morning hours.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 5,
+            "health": 4
+          }
+        },
+        "Kanya": {
+          "summary": "Deepen your inner balance through mindful discernment and patience with emotional shifts.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 8,
+          "transit_effect": "Challenging",
+          "general": "The 8th house Moon calls for quiet emotional contemplation rather than hasty external commitments. Trust that behind-the-scenes transitions are working for your eventual growth.",
+          "career": "Avoid taking uncalculated risks or rushing collaborative projects today. Focus on deep research, auditing, and refining hidden details.",
+          "finance": "Review joint finances, insurance matters, or family commitments with meticulous care. Refrain from lending money on impulse.",
+          "relationships": "Honest, compassionate vulnerability will strengthen intimate partnerships. Steer clear of unhelpful suspicions or over-analysis.",
+          "health": "Practice mindfulness to release underlying tension in the neck and shoulders. Keep your meals simple, light, and hydrating.",
+          "lucky_number": 4,
+          "lucky_color": "Sea Green",
+          "auspicious_time": "03:30 PM - 05:00 PM",
+          "remedy": "Chant the Mahamrityunjaya Mantra 11 times for peace and protection.",
+          "ratings": {
+            "career": 3,
+            "finance": 3,
+            "love": 3,
+            "health": 3
+          }
+        },
+        "Tula": {
+          "summary": "Harmonious partnerships and heartwarming social engagements make this Sunday glow.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 7,
+          "transit_effect": "Positive",
+          "general": "With the Full Moon directly illuminating your relationship sector, your charm and diplomatic skill reach full blossom. Meaningful agreements thrive under this influence.",
+          "career": "Consulting and public-facing engagements receive great reception today. Your ability to create consensus will resolve any lingering team friction.",
+          "finance": "Joint ventures and shared economic decisions gain traction. Discuss mutual financial plans with your partner openly.",
+          "relationships": "A beautifully romantic day where shared laughter and heartfelt appreciation take the spotlight. Single natives might experience a captivating introduction.",
+          "health": "Balance your hydration and enjoy leisure activities that soothe your nervous system. Gentle yoga is recommended.",
+          "lucky_number": 7,
+          "lucky_color": "Sky Blue",
+          "auspicious_time": "12:30 PM - 02:00 PM",
+          "remedy": "Offer white fragrant flowers (such as jasmine) to Goddess Lakshmi in the evening.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 5,
+            "health": 4
+          }
+        },
+        "Vrischika": {
+          "summary": "Productive momentum and disciplined organization bring a satisfying sense of accomplishment.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 6,
+          "transit_effect": "Neutral",
+          "general": "The 6th house transit of the Moon gives you the resilience and analytical precision needed to clear accumulated chores. Systematize your schedule for the upcoming week.",
+          "career": "Tackle intricate tasks that demand meticulous attention to detail. Your pragmatic solutions will quickly resolve minor workplace hurdles.",
+          "finance": "A good day to balance checkbooks, track recurring subscriptions, and settle small debts. Prudence today guarantees freedom tomorrow.",
+          "relationships": "Express care through thoughtful acts of service rather than complex discussions. Mutual support in daily duties brings warmth to domestic life.",
+          "health": "Pay attention to your gut health and avoid overly spicy or heavy foods. A brisk evening walk will boost your metabolism.",
+          "lucky_number": 8,
+          "lucky_color": "Maroon",
+          "auspicious_time": "07:30 AM - 09:00 AM",
+          "remedy": "Feed fresh green fodder or jaggery to a cow or recite the Hanuman Chalisa.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 3,
+            "health": 3
+          }
+        },
+        "Dhanu": {
+          "summary": "Creative inspiration, joyful leisure, and affectionate warmth enrich your day.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 5,
+          "transit_effect": "Positive",
+          "general": "With the Moon activating your 5th trine house, artistic flair and intuitive wisdom flourish effortlessly. Dedicate time to hobbies, children, or self-expression.",
+          "career": "Original ideas formulated today have immense market viability. Express your unconventional strategies with conviction and cheerfulness.",
+          "finance": "Speculative ventures should still be vetted with prudence, though good fortune smiles on creative monetizations. A small treat for family is well spent.",
+          "relationships": "Romance sparkles with spontaneous humor and playful affection. Joyful moments with children or creative friends lift your heart.",
+          "health": "Vibrant vitality keeps you in high spirits throughout the day. Engaging in outdoor sports or dance will feel wonderfully invigorating.",
+          "lucky_number": 3,
+          "lucky_color": "Saffron Yellow",
+          "auspicious_time": "01:00 PM - 02:30 PM",
+          "remedy": "Apply a subtle tilak of yellow chandan (sandalwood) on your forehead after your morning bath.",
+          "ratings": {
+            "career": 4,
+            "finance": 4,
+            "love": 5,
+            "health": 5
+          }
+        },
+        "Makara": {
+          "summary": "Domestic tranquility and inner contentment blossom as you focus on family harmony.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 4,
+          "transit_effect": "Neutral",
+          "general": "The Moon in your 4th house invites you to nest, recharge your emotional batteries, and beautify your living space. Cherish peaceful moments at home.",
+          "career": "Reflect on work-life harmony and plan your foundational strategy for next week. Avoid bringing occupational stress into your sanctuary.",
+          "finance": "Favorable day for home decor investments or reviewing family property matters. Ensure every major expense is aligned with long-term utility.",
+          "relationships": "Deep and healing conversations with your mother or maternal figures strengthen family roots. Create an atmosphere of security and mutual affection.",
+          "health": "Emotional relaxation will directly soothe physical tiredness. Savor warm herbal teas and practice slow, conscious breathing.",
+          "lucky_number": 4,
+          "lucky_color": "Silver Grey",
+          "auspicious_time": "04:00 PM - 05:30 PM",
+          "remedy": "Seek the heartfelt blessings of your mother or an elder matriarch in the family.",
+          "ratings": {
+            "career": 3,
+            "finance": 4,
+            "love": 4,
+            "health": 4
+          }
+        },
+        "Kumbha": {
+          "summary": "Clear communication, purposeful initiatives, and joyful local outings energize you.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 3,
+          "transit_effect": "Positive",
+          "general": "The 3rd house Moon enhances your courage, curiosity, and communicative charisma. Short trips, lively exchanges, and new learning adventures are favored.",
+          "career": "Writing, pitching concepts, and closing communication loops will proceed seamlessly. Your proactive initiative inspires colleagues to step up.",
+          "finance": "Modest commercial ventures or marketing endeavors show promising indicators. Expenses related to technology or travel yield good value.",
+          "relationships": "Warm camaraderie with siblings, cousins, and neighbors brightens your afternoon. An honest conversation brings two close friends even closer.",
+          "health": "Shoulders, arms, and respiratory vitality are strong. Channel your excess energy into a refreshing workout or creative hobby.",
+          "lucky_number": 8,
+          "lucky_color": "Electric Blue",
+          "auspicious_time": "09:00 AM - 10:30 AM",
+          "remedy": "Chant the Gayatri Mantra 24 times facing the morning sun.",
+          "ratings": {
+            "career": 5,
+            "finance": 4,
+            "love": 4,
+            "health": 5
+          }
+        },
+        "Meena": {
+          "summary": "Financial discernment, gracious speech, and delightful family meals crown your day.",
+          "moon_sign_position": "Mesha",
+          "chandra_house": 2,
+          "transit_effect": "Positive",
+          "general": "The Moon's presence in your 2nd house accentuates domestic prosperity, eloquent speech, and emotional stability. Speak with kindness, and doors will open effortlessly.",
+          "career": "Solidify upcoming business negotiations by articulating value clearly. Your measured, confident tone earns respect from partners.",
+          "finance": "Promising trends for savings, wealth consolidation, and family asset growth. Avoid impulse shopping by keeping a firm shopping list.",
+          "relationships": "Gathering around wholesome food with family members brings laughter and warmth. Sweet-spoken words heal any past domestic tension.",
+          "health": "Pay attention to vocal hygiene and keep yourself hydrated with warm water. Gentle walks after meals will aid smooth digestion.",
+          "lucky_number": 3,
+          "lucky_color": "Pale Yellow",
+          "auspicious_time": "10:30 AM - 12:00 PM",
+          "remedy": "Offer raw milk, batasha (sugar sweets), and white flowers to the Full Moon at night.",
+          "ratings": {
+            "career": 4,
+            "finance": 5,
+            "love": 4,
+            "health": 4
           }
         }
       }
